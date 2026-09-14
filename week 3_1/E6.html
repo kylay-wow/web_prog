@@ -1,0 +1,60 @@
+<!-- Build a horizontal navigation bar using Flexbox. 
+ The bar should have a dark background (#1e293b), logo text on the left, 
+ and navigation links on the right. 
+ Links should be white, have no underline, 
+ and change to emerald (#10B981) on hover. 
+ Use justify-content: space-between to push logo left and links right. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; }
+
+    /* TODO: style the nav — dark background, display flex, padding */
+    nav {
+        background-color: #1e293b;
+        display: flex;
+        padding: 20px;
+        justify-content: space-between;
+    }
+
+    /* TODO: style .logo — white, bold, no decoration */
+    .logo {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    /* TODO: style .nav-links — display flex, gap */
+    .nav-links {
+        display: flex;
+        gap: 20px;
+    }
+
+    /* TODO: style .nav-links a — white, no underline */
+    .nav-links a {
+        color: white;
+        text-decoration: none;
+    }
+
+    /* TODO: hover state — emerald #10B981 */
+    .nav-links a:hover {
+        color: #10B981;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#" class="logo">WebPro</a>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Topics</a>
+      <a href="#">Quiz</a>
+      <a href="#">About</a>
+    </div>
+  </nav>
+</body>
+</html>

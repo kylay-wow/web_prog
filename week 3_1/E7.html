@@ -1,0 +1,72 @@
+<!-- Build a profile card from scratch using CSS. 
+ Requirements: white card on a light background, avatar circle 
+ (80×80px, green background, white initial letter centred), 
+ name in 1.5rem bold, role text in muted grey, a horizontal line, 
+ and a Flexbox row of skill badges (rounded pills with green background). 
+ Put it all in one self-contained HTML file. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* TODO: write all CSS here */
+    /* Hint: start with body, then .card, then .avatar, .name, .role, hr, .skills, .badge */
+    body{
+        background-color: bisque;
+    }  
+    .card{
+        background-color: white;
+        padding: 20px;
+        width: 350px;
+        border-radius: 10px;
+    }
+    .avatar{
+        width: 80px;
+        height: 80px;
+        background-color: green;
+        color: white;
+        text-align: center;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .name{
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    .role{
+        color: grey;
+
+    }
+    hr{
+        border: none;
+        border-top: 1px solid #000000; 
+    }
+    .skills{
+        display: flex;
+        gap: 10px;
+    }
+    .badge{
+        background-color: green;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar">K</div>
+    <h2 class="name">Kim Jisoo</h2>
+    <p class="role">Web Programming Student</p>
+    <hr>
+    <div class="skills">
+      <span class="badge">HTML5</span>
+      <span class="badge">CSS3</span>
+      <span class="badge">Flexbox</span>
+    </div>
+  </div>
+</body>
+</html>
