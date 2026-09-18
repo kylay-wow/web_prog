@@ -1,0 +1,87 @@
+<!-- Build a page with a CSS Grid layout that is 1-column on mobile 
+ and switches to a 3-column grid at 640px. 
+ Each card should have: a ::before pseudo-element that adds an emoji icon, 
+ a hover transition that lifts the card, 
+ and CSS variables for colour consistency. 
+ The page should also have a dark mode via @media (prefers-color-scheme: dark). -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+  /* TODO: :root variables — --primary, --accent, --bg, --text, --radius */
+  :root{
+    --primary: skyblue;
+    --accent: darkred;
+    --bg: beige;
+    --text: black;
+    --radius: 15px;
+  }
+
+  /* TODO: * reset */
+  *reset{
+    background-color: white;
+    color: lightgrey;
+  }
+
+  /* TODO: body styles */
+  body{
+    background-color: var(--bg);
+    border-radius: var(--radius);
+    color: var(--text);
+    border: 2px solid var(--accent);
+  }
+  /* TODO: .grid — display:grid, 1 column base, gap */
+  .grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  /* TODO: @media (min-width: 640px) — 3 columns */
+  @media (min-width: 640px) {
+    .grid{grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  /* TODO: .card — border, padding, radius, transition */
+  .card{
+    border-radius: var(--radius);
+    padding: 25px;
+    transition: opacity 0.5s ease;
+    transform: translateY(0);
+  }
+  /* TODO: .card:hover — lift effect */
+  .card:hover{
+    transform: translateY(-10px)
+  }
+
+  /* TODO: .card[data-icon]::before — content using attr() */
+  .card[data-icon]::before{
+    content: attr(data-icon);
+    font-size: 2rem;
+    display: block;
+  }
+  /* Hint: content: attr(data-icon) '  '; font-size: 2rem; display: block; */
+
+  /* TODO: dark mode @media */
+  @media (prefers-color-scheme: dark){
+    body{
+        background-color: rgb(11, 12, 11);
+        color: rgb(21,21,21);
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>My Skills</h1>
+  <div class="grid">
+    <div class="card" data-icon="🌐">HTML5 — Structure</div>
+    <div class="card" data-icon="🎨">CSS3 — Styling</div>
+    <div class="card" data-icon="⚡">JavaScript — Behaviour</div>
+    <div class="card" data-icon="📐">Flexbox — 1D Layout</div>
+    <div class="card" data-icon="🗂">Grid — 2D Layout</div>
+    <div class="card" data-icon="📱">Responsive — Any Screen</div>
+  </div>
+</body>
+</html>

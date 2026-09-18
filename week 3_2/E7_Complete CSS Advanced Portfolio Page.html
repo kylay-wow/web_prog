@@ -1,0 +1,122 @@
+<!-- Build a complete personal page using ALL techniques from this session. 
+ Requirements: 
+ 1) CSS variables in :root with dark mode, 
+ 2) fixed navigation bar, 
+ 3) hero section with a fade-in @keyframes animation, 
+ 4) responsive grid (1 col mobile → 3 col desktop) of skill cards 
+ with ::before emoji icons and hover transitions, 
+ 5) a sticky section heading that sticks as you scroll. 
+ Fill in your own name, major, and skills. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My CSS Advanced Page</title>
+<style>
+  /* TODO: Write all CSS here — use the techniques from this session */
+  /* 1. :root variables + dark mode */
+  * {
+  box-sizing: border-box;
+    }
+  :root{
+    --primary: skyblue;
+    --accent: darkred;
+    --bg: wheat;
+    --color: black;
+    --radius: 20px;
+    --padding: 15px;
+    --border: 2px solid rgb(77, 32, 32);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+        --primary: rgb(21,21,21); 
+        --color: white;
+    }
+  }
+  /* 2. Fixed nav */
+  nav{
+    padding: var(--padding);
+    position: fixed;
+    color: white;
+    background: rgb(40, 41, 41);
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    top: 0;
+    left: 0;
+  }
+
+  /* 3. @keyframes fadeIn + hero */
+  @keyframes fadeIn{
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+  }
+
+  .hero{
+    animation: fadeIn 0.8s ease forwards;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--color);
+    padding: 100px 15px 50px;
+  }
+  /* 4. Responsive grid with ::before icons + hover */
+  .grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  @media (min-width: 640px){
+    .grid{
+        grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card:hover{
+    transform: translateY(-10px);
+    border: var(--border);
+  }
+
+  .grid .card[data-icon]::before{
+    content: attr(data-icon);
+    font-size: 18px;
+    display: block;
+  }
+  /* 5. Sticky section headings */
+  .sticky-h2{
+    position: sticky;
+    top: 0;
+    background: whitesmoke;
+
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <span>Kylie</span>
+    <div><a href="#">Home</a> 
+        <a href="#">Skills</a></div>
+  </nav>
+  <section class="hero">
+    <h1>Hello, I am [Kylie]</h1>
+    <p>[Cybersecurity] · Gachon University · Week 3 CSS Advanced</p>
+  </section>
+  <section class="skills-section">
+    <h2 class="sticky-h2">My Skills</h2>
+    <div class="grid">
+      <div class="card" data-icon="🌐">HTML5</div>
+      <div class="card" data-icon="🎨">CSS3</div>
+      <div class="card" data-icon="⚡">JavaScript</div>
+    </div>
+  </section>
+</body>
+</html>
