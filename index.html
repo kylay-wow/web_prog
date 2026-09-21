@@ -1,1 +1,84 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Development Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#weeks">Weeks</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+ 
+  <main>
+ 
+    <section id="home" class="hero">
+      <div class="container">
+        <h1>Web Development Portfolio</h1>
+        <p class="subtitle">HTML &amp; CSS Exercises • Weekly Coursework</p>
+        <p>This site contains my weekly exercises for Web Development class. Pick a week below to see the exercises.</p>
+      </div>
+    </section>
+ 
+    <section id="weeks">
+      <div class="container">
+        <h2>Weekly Exercises</h2>
+ 
+        <div class="week-card">
+          <h3>Week 1 — HTML Foundations</h3>
+          <p>Semantic tags, document structure and basic text formatting.</p>
+          <ul>
+            <li><a href="week1/E1.html">Exercise 1 — Page structure</a></li>
+            <li><a href="week1/E2.html">Exercise 2 — Text &amp; lists</a></li>
+          </ul>
+        </div>
+ 
+        <div class="week-card">
+          <h3>Week 2 — CSS Basics</h3>
+          <p>Selectors, the box model, colour and typography.</p>
+          <ul>
+            <li><a href="week2/exercise1.html">Exercise 1 — Box model</a></li>
+            <li><a href="week2/exercise2.html">Exercise 2 — Colour &amp; type</a></li>
+          </ul>
+        </div>
+ 
+        <div class="week-card">
+          <h3>Week 3 — Layout with Flexbox</h3>
+          <p>Building flexible, responsive layouts using Flexbox.</p>
+          <ul>
+            <li><a href="week3/exercise1.html">Exercise 1 — Flex containers</a></li>
+            <li><a href="week3/exercise2.html">Exercise 2 — Responsive nav</a></li>
+          </ul>
+        </div>
+ 
+        <!--
+          To add a new week, copy a whole "week-card" div above
+          and change the title, description and links.
+        -->
+ 
+      </div>
+    </section>
+ 
+    <section id="about">
+      <div class="container">
+        <h2>About</h2>
+        <p>This is my Web Development coursework portfolio, built with plain HTML and CSS as I learn each topic week by week.</p>
+      </div>
+    </section>
+ 
+  </main>
+ 
+  <footer>
+    <p>Web Development Portfolio</p>
+  </footer>
+ 
+</body>
+</html>
