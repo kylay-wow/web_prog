@@ -1,89 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Development Portfolio</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Development Portfolio</title>
+    <meta name="description" content="Weekly HTML, CSS &amp; JavaScript coursework exercises — a web development portfolio.">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
  
-  <header>
-    <div class="container">
-      <nav>
-        <a href="#home">Home</a>
-        <a href="#weeks">Weeks</a>
-        <a href="#about">About</a>
-      </nav>
-    </div>
+  <header class="site-header">
+    <nav class="navbar" aria-label="Main navigation">
+      <a href="#home" class="brand">
+        <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+        <span class="brand-text">Weekly Practice</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#weeks">Weeks</a></li>
+        <li><a href="#topics">Topics</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
   </header>
  
-  <main>
+  <main id="main">
  
+    <!-- ============ HERO ============ -->
     <section id="home" class="hero">
-      <div class="container">
-        <h1>Web Development Portfolio</h1>
-        <p class="subtitle">HTML &amp; CSS Exercises • Weekly Coursework</p>
-        <p>This site contains my weekly exercises for Web Development class. Pick a week below to see the exercises.</p>
+      <div class="hero-decoration" aria-hidden="true">
+      </div>
+ 
+      <div class="hero-inner">
+        <p class="eyebrow-line"><span class="dot" aria-hidden="true"></span>Coursework portfolio, updated weekly</p>
+        <h1>Web Development<br>Portfolio</h1>
+        <p class="subtitle">HTML, CSS &amp; JavaScript Exercises • Weekly Coursework</p>
+        <p class="intro">
+          This site collects every exercise and study guide from my Web Development course, organised
+          week by week. Each card below links straight to the rendered HTML page for that topic — no
+          source browsing required. Start with Week 1, or jump to whichever week you'd like to review.
+        </p>
+        <div class="hero-actions">
+          <a href="#weeks" class="btn btn-primary">Browse the weeks</a>
+          <a href="#about" class="btn btn-ghost">About this coursework</a>
+        </div>
       </div>
     </section>
  
-    <section id="weeks">
-      <div class="container">
+    <!-- ============ WEEKS ============ -->
+    <section id="weeks" class="weeks-section">
+      <div class="section-heading">
         <h2>Weekly Exercises</h2>
+        <p>Every week builds on the last. Click any exercise to open the live page.</p>
+      </div>
  
-        <div class="week-card">
+      <div class="weeks-grid">
+ 
+        <!-- Week 1 -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">01</span>
+            <span class="week-count">2 exercises</span>
+          </div>
           <h3>Week 1 — HTML Foundations</h3>
-          <p>Semantic tags, document structure and basic text formatting.</p>
-          <ul>
-            <li><a href="week 2_2/E1_Convert Div Soup to Semantic HTML.html">Exercise 1 — Convert Div Soup to Semantic HTML</a></li>
-            <li><a href="week 2_2/E2_Blog Article with header n footer.html">Exercise 2 — Blog Article with header n footer</a></li>
-            <li><a href="week 2_2/E3_Figure, figcaption n time.html">Exercise 3 — Figure, figcaption n time</a></li>
-            <li><a href="week 2_2/E4_FAQ with details n summary.html">Exercise 4 — FAQ with details n summary</a></li>
-            <li><a href="week 2_2/E5_Full Semantic Portfolio Page.html">Exercise 5 — Full Semantic Portfolio Page</a></li>
-            <li><a href="week 2_2/E6_Fix Semantic Errors.html">Exercise 6 — Fix Semantic Errors</a></li>
-            <li><a href="week 2_2/E7_Quotation & Citation Page.html">Exercise 7 — Quotation & Citation Page</a></li>
-            <li><a href="week 2_2/E8_News Article — All Semantic Elements.html">Exercise 8 — News Article — All Semantic Elements</a></li>
+          <p class="week-desc">Getting started with semantic tags, document structure and basic text formatting.</p>
+          <ul class="exercise-list">
+            <li>
+              <a href="week1/E1.html">
+                <span class="ex-icon" aria-hidden="true">▸</span>
+                <span class="ex-label">Exercise 1 — Page structure</span>
+              </a>
+            </li>
+            <li>
+              <a href="week1/E2.html">
+                <span class="ex-icon" aria-hidden="true">▸</span>
+                <span class="ex-label">Exercise 2 — Text &amp; lists</span>
+              </a>
+            </li>
           </ul>
-        </div>
+        </article>
  
-        <div class="week-card">
-          <h3>Week 2 — CSS Basics</h3>
-          <p>Selectors, the box model, colour and typography.</p>
-          <ul>
-            <li><a href="week2/exercise1.html">Exercise 1 — Box model</a></li>
-            <li><a href="week2/exercise2.html">Exercise 2 — Colour &amp; type</a></li>
+        <!-- Week 2 -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">02</span>
+            <span class="week-count">16 exercises</span>
+          </div>
+          <h3>Week 2 — HTML Fundamentals &amp; Semantic HTML</h3>
+          <p class="week-desc">Core HTML syntax and document structure, then rebuilding pages with meaningful, semantic markup.</p>
+          <ul class="exercise-list">
+            <li class="day-divider" style="list-style:none;padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu,#6b7280);border-top:1px solid rgba(0,0,0,.08);margin-top:4px">Monday — HTML Fundamentals</li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-1"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E1_The HTML Skeleton</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-2"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E2_Headings, Paragraphs and Emphasis</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-3"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E3_Navigation List with Links</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-4"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E4_Image with Meaningful alt Text</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-5"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E5_Complete Profile Page</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-6"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E6_Fix the Broken HTML</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-7"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E7_Ordered Steps with Nested List</span></a></li>
+            <li><a href="week2/WebPro_Week2_StudyGuide.html#exercise-8"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E8_My Favourites Gallery</span></a></li>
+            <li class="day-divider" style="list-style:none;padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu,#6b7280);border-top:1px solid rgba(0,0,0,.08);margin-top:8px">Friday — Semantic HTML</li>
+            <li><a href="week 2_2/E1_Convert Div Soup to Semantic HTML.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E1_Convert Div Soup to Semantic HTML</span></a></li>
+            <li><a href="week 2_2/E2_Blog Article with header n footer.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E2_Blog Article with header &amp; footer</span></a></li>
+            <li><a href="week 2_2/E3_Figure, figcaption n time.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E3_Figure, figcaption &amp; time</span></a></li>
+            <li><a href="week 2_2/E4_FAQ with details n summary.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E4_FAQ with details &amp; summary</span></a></li>
+            <li><a href="week 2_2/E5_Full Semantic Portfolio Page.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E5_Full Semantic Portfolio Page</span></a></li>
+            <li><a href="week 2_2/E6_Fix Semantic Errors.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E6_Fix Semantic Errors</span></a></li>
+            <li><a href="week 2_2/E7_Quotation & Citation Page.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E7_Quotation &amp; Citation Page</span></a></li>
+            <li><a href="week 2_2/E8_News Article — All Semantic Elements.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E8_News Article — All Semantic Elements</span></a></li>
           </ul>
-        </div>
+        </article>
  
-        <div class="week-card">
-          <h3>Week 3 — Layout with Flexbox</h3>
-          <p>Building flexible, responsive layouts using Flexbox.</p>
-          <ul>
-            <li><a href="week3/exercise1.html">Exercise 1 — Flex containers</a></li>
-            <li><a href="week3/exercise2.html">Exercise 2 — Responsive nav</a></li>
+        <!-- Week 3 -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">03</span>
+            <span class="week-count">15 exercises</span>
+          </div>
+          <h3>Week 3 — CSS Introduction &amp; CSS Advanced</h3>
+          <p class="week-desc">Selectors, colour and the box model, then advanced positioning, Flexbox, Grid and animation.</p>
+          <ul class="exercise-list">
+            <li class="day-divider" style="list-style:none;padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu,#6b7280);border-top:1px solid rgba(0,0,0,.08);margin-top:4px">Monday — CSS Introduction</li>
+            <li><a href="week 3_1/E1.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E1_Style Your First Heading</span></a></li>
+            <li><a href="week 3_1/E2.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E2_Three Ways — Spot the Difference</span></a></li>
+            <li><a href="week 3_1/E3.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E3_Color Palette Card</span></a></li>
+            <li><a href="week 3_1/E4.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E4_Box Model Explorer</span></a></li>
+            <li><a href="week 3_1/E5.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E5_Fix the Broken CSS</span></a></li>
+            <li><a href="week 3_1/E6.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E6_Flexbox Navigation Bar</span></a></li>
+            <li><a href="week 3_1/E7.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E7_Profile Card with CSS</span></a></li>
+            <li><a href="week 3_1/E8.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E8_Full Style Sheet from Scratch</span></a></li>
+            <li class="day-divider" style="list-style:none;padding:10px 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mu,#6b7280);border-top:1px solid rgba(0,0,0,.08);margin-top:8px">Friday — CSS Advanced</li>
+            <li><a href="week 3_2/E1_Positiion The BAdge.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E1_Position the Badge</span></a></li>
+            <li><a href="week 3_2/E2_Hover Card with Transition.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E2_Hover Card with Transition</span></a></li>
+            <li><a href="week 3_2/E3_Loading Spinner with @keyframes.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E3_Loading Spinner with @keyframes</span></a></li>
+            <li><a href="week 3_2/E4_ CSS Variables Theme.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E4_CSS Variables Theme</span></a></li>
+            <li><a href="week 3_2/E5_Fixed Navigation Bar.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E5_Fixed Navigation Bar</span></a></li>
+            <li><a href="week 3_2/E6_Responsive Grid Page.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E6_Responsive Grid Page</span></a></li>
+            <li><a href="week 3_2/E7_Complete CSS Advanced Portfolio Page.html"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E7_Complete CSS Advanced Portfolio Page</span></a></li>
           </ul>
-        </div>
+        </article>
+ 
+        <!-- Week 4 -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">04</span>
+            <span class="week-count">4 exercises</span>
+          </div>
+          <h3>Week 4 — JavaScript DOM &amp; Events</h3>
+          <p class="week-desc">Selecting and manipulating elements, listening for events, and building interactive pages with the DOM.</p>
+          <ul class="exercise-list">
+            <li><a href="week4/activity.html#ex1"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E1_Click Counter with Color Change</span></a></li>
+            <li><a href="week4/activity.html#ex2"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E2_Dark Mode Toggle Card</span></a></li>
+            <li><a href="week4/activity.html#ex3"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E3_Interactive To-Do List</span></a></li>
+            <li><a href="week4/activity.html#ex4"><span class="ex-icon" aria-hidden="true">▸</span><span class="ex-label">E4_Live Search Filter (Advanced)</span></a></li>
+          </ul>
+        </article>
  
         <!--
-          To add a new week, copy a whole "week-card" div above
-          and change the title, description and links.
+          TEMPLATE — copy this block to add a new week.
+          Update the week number, title, description and links below.
+ 
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">05</span>
+            <span class="week-count">N exercises</span>
+          </div>
+          <h3>Week X — Topic Title</h3>
+          <p class="week-desc">Short description of what this week covers.</p>
+          <ul class="exercise-list">
+            <li>
+              <a href="weekX/exerciseN.html">
+                <span class="ex-icon" aria-hidden="true">▸</span>
+                <span class="ex-label">Exercise N — Short label</span>
+              </a>
+            </li>
+          </ul>
+        </article>
         -->
  
       </div>
     </section>
  
-    <section id="about">
-      <div class="container">
-        <h2>About</h2>
-        <p>This is my Web Development coursework portfolio, built with plain HTML and CSS as I learn each topic week by week.</p>
+    <!-- ============ TOPICS ============ -->
+    <section id="topics" class="topics-section weeks-section">
+      <div class="section-heading">
+        <h2>Weekly Topics</h2>
+        <p>Every concept covered in each study guide, in the order it was taught.</p>
+      </div>
+ 
+      <div class="weeks-grid">
+ 
+        <!-- Week 2 topics -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">02</span>
+            <span class="week-count">50 topics</span>
+          </div>
+          <h3>Week 2 — HTML Fundamentals &amp; Semantic HTML</h3>
+ 
+          <p class="topic-day-label">Monday — HTML Fundamentals</p>
+          <div class="topic-tags">
+            <a class="topic-tag" href="week 2_1/">What is HTML?</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">DOCTYPE Declaration</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The &lt;body&gt; Element</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Headings h1–h6</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The &lt;head&gt; Section</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">meta charset UTF-8</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The &lt;title&gt; Element</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The lang Attribute</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Paragraphs &amp; Block Elements</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Inline Elements &amp; &lt;span&gt;</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">&lt;strong&gt; — Bold &amp; Important</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">&lt;em&gt; — Italic &amp; Emphasis</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Void Elements &amp; &lt;br&gt;</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Links: the &lt;a&gt; Tag &amp; href</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">target="_blank"</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Unordered Lists &lt;ul&gt;</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Ordered Lists &lt;ol&gt;</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">List Items &lt;li&gt;</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Images: &lt;img src&gt;</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The alt Attribute</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The id Attribute</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">The class Attribute</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">HTML Comments</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Block vs Inline Summary</a>
+            <a class="topic-tag" href="week2/WebPro_Week2_StudyGuide.html">Complete Page — Putting It All Together</a>
+          </div>
+ 
+          <p class="topic-day-label">Friday — Semantic HTML</p>
+          <div class="topic-tags">
+            <a class="topic-tag" href="week 2_2/Topic 1_What is semantic HTML.html">What is Semantic HTML?</a>
+            <a class="topic-tag" href="week 2_2/Topic 2_Headers.html">&lt;header&gt; — Page &amp; Section Header</a>
+            <a class="topic-tag" href="week 2_2/Topic 3_Nav.html">&lt;nav&gt; — Navigation Landmark</a>
+            <a class="topic-tag" href="week 2_2/Topic 4_Main.html">&lt;main&gt; — The Main Content</a>
+            <a class="topic-tag" href="week 2_2/Topic 5_Footer.html">&lt;footer&gt; — Page &amp; Section Footer</a>
+            <a class="topic-tag" href="week 2_2/Topic 6_Section.html">&lt;section&gt; — Thematic Grouping</a>
+            <a class="topic-tag" href="week 2_2/Topic 7_Self-Contained Content.html">&lt;article&gt; — Self-Contained Content</a>
+            <a class="topic-tag" href="week 2_2/Topic 8_Tangentially Related Content.html">&lt;aside&gt; — Tangentially Related Content</a>
+            <a class="topic-tag" href="week 2_2/Topic 9_ The Non-Semantic Container.html">&lt;div&gt; — The Non-Semantic Container</a>
+            <a class="topic-tag" href="week 2_2/Topic 10_Self-Contained Figure.html">&lt;figure&gt; — Self-Contained Figure</a>
+            <a class="topic-tag" href="week 2_2/Topic 11_Caption for Figure.html">&lt;figcaption&gt; — Caption for Figure</a>
+            <a class="topic-tag" href="week 2_2/Topic 12_Contact Information.html">&lt;time&gt; — Machine-Readable Dates</a>
+            <a class="topic-tag" href="week 2_2/Topic 13_Time.html">&lt;address&gt; — Contact Information</a>
+            <a class="topic-tag" href="week 2_2/Topic 14_Highlighted Text.html">&lt;mark&gt; — Highlighted Text</a>
+            <a class="topic-tag" href="week 2_2/Topic 15_Abbreviations.html">&lt;abbr&gt; — Abbreviations</a>
+            <a class="topic-tag" href="week 2_2/TOpic 16_Block Quotations.html">&lt;blockquote&gt; — Block Quotation</a>
+            <a class="topic-tag" href="week 2_2/Topic 17_Inline quotation.html">&lt;q&gt; — Inline Quotation</a>
+            <a class="topic-tag" href="week 2_2/Topic 18_Title of a work.html">&lt;cite&gt; — Title of a Work</a>
+            <a class="topic-tag" href="week 2_2/Topic 19_Inline code.html">&lt;code&gt; — Inline Code</a>
+            <a class="topic-tag" href="week 2_2/Topic 20_Preformatted text.html">&lt;pre&gt; — Preformatted Text</a>
+            <a class="topic-tag" href="week 2_2/Topic 21_Disclosure window.html">&lt;details&gt; &amp; &lt;summary&gt; — Disclosure Widget</a>
+            <a class="topic-tag" href="week 2_2/Topic 22_Popups.html">&lt;dialog&gt; — Popup/Modal</a>
+            <a class="topic-tag" href="week 2_2/Topic 23_ARIA.html">ARIA role Attribute</a>
+            <a class="topic-tag" href="week 2_2/Topic 24_Semantic Landmarks & Accessibility.html">Semantic Landmarks &amp; Accessibility</a>
+            <a class="topic-tag" href="week 2_2/Topic 25_Complete everything.html">Complete Semantic Page — All Together</a>
+          </div>
+        </article>
+ 
+        <!-- Week 3 topics -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">03</span>
+            <span class="week-count">40 topics</span>
+          </div>
+          <h3>Week 3 — CSS Introduction &amp; CSS Advanced</h3>
+ 
+          <p class="topic-day-label">Monday — CSS Introduction</p>
+          <div class="topic-tags">
+            <a class="topic-tag" href="week 3_1/Topics/Topic 1_What is CSS.html">What is CSS?</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 2_3 ways to add CSS.html">Three Ways to Add CSS</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 3_CSS Syntax.html">CSS Syntax</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 4_The universal selector.html">The Universal Selector (*)</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 5_ID selector.html">ID Selector (#id)</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 6_Class selecctor.html">Class Selector (.class)</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 7_Topic-element selector.html">Type / Element Selector</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 8_Color property.html">The color Property</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 9_background color.html">background-color Property</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 10_HEX code.html">Hex Color Codes</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 11_RGB color code.html">RGB Color Values</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 12_font-size.html">font-size Property</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 13_font-weight.html">font-weight Property</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 14_font-style.html">font-style Property</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 15_text align.html">text-align Property</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 16_box model-padding.html">Box Model: Padding</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 17_box model-margin.html">Box Model: Margin</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 18_box model width calculation.html">Box Model Width Calculation</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 19_display block.html">display: block</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 20_display none.html">display: none</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 21_display flex.html">display: flex</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 22_display specificity.html">CSS Specificity</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 23_which selector wins.html">Which Selector Wins?</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 24_CSS comments.html">CSS Comments</a>
+            <a class="topic-tag" href="week 3_1/Topics/Topic 25_putting it all togeher.html">Putting It All Together</a>
+          </div>
+ 
+          <p class="topic-day-label">Friday — CSS Advanced</p>
+          <div class="topic-tags">
+            <a class="topic-tag" href="week 3_2/Topics/Topic 1_position static n relative.html">position: static &amp; relative</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 2_position absolute.html">position: absolute</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 3_position fixed n sticky.html">position: fixed &amp; sticky</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 4_Zindex n overflow.html">z-index &amp; overflow</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 5_Pseudo-classes.html">Pseudo-classes</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 6_Pseudo-elements.html">Pseudo-elements ::before &amp; ::after</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 7_CSS transitions.html">CSS Transitions</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 8_keyframes.html">CSS Animations &amp; @keyframes</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 9_CSS variables.html">CSS Custom Properties (Variables)</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 10_CSS media queries.html">CSS Media Queries</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 11_Advanced flexbox.html">Advanced Flexbox</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 12_CSS grids.html">CSS Grid</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 13_border-radius n box-shadow.html">border-radius &amp; box-shadow</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 14_inherit.html">The CSS inherit Keyword</a>
+            <a class="topic-tag" href="week 3_2/Topics/Topic 15_putting it all together.html">Putting CSS Advanced Together</a>
+          </div>
+        </article>
+ 
+        <!-- Week 4 topics -->
+        <article class="week-card">
+          <div class="week-card-top">
+            <span class="week-number">04</span>
+            <span class="week-count">12 topics</span>
+          </div>
+          <h3>Week 4 — JavaScript DOM &amp; Events</h3>
+ 
+          <div class="topic-tags">
+            <a class="topic-tag" href="week4/activity.html">What is the DOM?</a>
+            <a class="topic-tag" href="week4/activity.html">Selecting Elements</a>
+            <a class="topic-tag" href="week4/activity.html">querySelector &amp; querySelectorAll</a>
+            <a class="topic-tag" href="week4/activity.html">textContent — Reading &amp; Writing Text</a>
+            <a class="topic-tag" href="week4/activity.html">innerHTML — Power &amp; Danger ⚠️</a>
+            <a class="topic-tag" href="week4/activity.html">classList — Styling with JavaScript</a>
+            <a class="topic-tag" href="week4/activity.html">addEventListener</a>
+            <a class="topic-tag" href="week4/activity.html">The Event Object (e)</a>
+            <a class="topic-tag" href="week4/activity.html">e.preventDefault()</a>
+            <a class="topic-tag" href="week4/activity.html">Event Bubbling &amp; Delegation</a>
+            <a class="topic-tag" href="week4/activity.html">createElement &amp; appendChild</a>
+            <a class="topic-tag" href="week4/activity.html">Removing Elements</a>
+          </div>
+        </article>
+ 
+      </div>
+    </section>
+ 
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="about-section">
+      <div class="about-inner">
+        <h2>About this coursework</h2>
+        <p>
+          This portfolio is built as part of my Web Development module, focused on HTML, CSS and
+          JavaScript fundamentals. Each week introduces a new concept — from semantic markup through
+          responsive layout to DOM manipulation and events — and the guides and exercises on this
+          site are my practice work for that topic.
+        </p>
+        <p>
+          The site itself is hand-written with semantic HTML5 and plain CSS3: no frameworks and
+          no build tools, so every page stays easy to read, mark and extend as the course
+          progresses.
+        </p>
+        <dl class="about-stats">
+          <div class="stat">
+            <dt>Weeks so far</dt>
+            <dd>4</dd>
+          </div>
+          <div class="stat">
+            <dt>Exercises &amp; guides so far</dt>
+            <dd>37</dd>
+          </div>
+          <div class="stat">
+            <dt>Frameworks used</dt>
+            <dd>0</dd>
+          </div>
+        </dl>
       </div>
     </section>
  
   </main>
  
-  <footer>
-    <p>Web Development Portfolio</p>
+  <footer class="site-footer">
+    <p>Web Development Portfolio — built with semantic HTML5 &amp; CSS3.</p>
   </footer>
  
 </body>
