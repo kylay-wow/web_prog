@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Practice</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: lightblue;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .box {
+            background-color: white;
+            border: 1px solid gray;
+            padding: 20px;
+            margin: 20px auto;
+            width: 350px;
+        }
+
+        input, button {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        #step, #fruit, #grade {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>JavaScript Practice</h1>
+
+    <!-- 1. Grade Checker -->
+    <div class="box">
+        <h2>1. Grade Checker</h2>
+
+        <p>Enter your score:</p>
+
+        <input type="number" id="score" placeholder="0 - 100"
+               min="0" max="100">
+
+        <button onclick="checkGrade()">Check Grade</button>
+
+        <p id="grade">Your grade will appear here.</p>
+    </div>
+
+    <!-- 2. Step Loop -->
+    <div class="box">
+        <h2>2. Step Loop</h2>
+
+        <p>Click the button to loop through 5 steps.</p>
+
+        <p id="step">Ready to start!</p>
+
+        <button onclick="nextStep()">Next Step</button>
+        <button onclick="resetSteps()">Reset</button>
+    </div>
+
+    <!-- 3. Fruit Loop -->
+    <div class="box">
+        <h2>3. Fruit Loop</h2>
+
+        <p>Click the button to loop through the fruits.</p>
+
+        <p id="fruit">🍎 Apple</p>
+
+        <button onclick="nextFruit()">Next Fruit</button>
+        <button onclick="resetFruits()">Reset</button>
+    </div>
+
+    <script>
+        // 1. Grade Checker
+        function checkGrade() {
+            let score = Number(document.getElementById('score').value);
+            let grade = '';
+
+            if (document.getElementById('score').value === '') {
+                document.getElementById('grade').textContent =
+                    'Please enter a score.';
+                return;
+            }
+
+            if (score < 0 || score > 100) {
+                document.getElementById('grade').textContent =
+                    'Please enter a score from 0 to 100.';
+                return;
+            }
+
+            if (score >= 90) {
+                grade = 'A';
+            } else if (score >= 80) {
+                grade = 'B';
+            } else if (score >= 70) {
+                grade = 'C';
+            } else {
+                grade = 'F';
+            }
+
+            document.getElementById('grade').textContent =
+                'Your grade is: ' + grade;
+        }
+
+        // 2. Step Loop
+        let stepNumber = 1;
+
+        function nextStep() {
+            if (stepNumber <= 5) {
+                document.getElementById('step').textContent =
+                    'Step ' + stepNumber;
+
+                stepNumber++;
+            } else {
+                document.getElementById('step').textContent =
+                    'Finished all 5 steps!';
+            }
+        }
+
+        function resetSteps() {
+            stepNumber = 1;
+            document.getElementById('step').textContent =
+                'Ready to start!';
+        }
+
+        // 3. Fruit Loop
+        let fruits = ['🍎 Apple', '🍌 Banana', '🍒 Cherry'];
+        let fruitIndex = 0;
+
+        function nextFruit() {
+            document.getElementById('fruit').textContent =
+                fruits[fruitIndex];
+
+            fruitIndex++;
+
+            if (fruitIndex >= fruits.length) {
+                fruitIndex = 0;
+            }
+        }
+
+        function resetFruits() {
+            fruitIndex = 0;
+            document.getElementById('fruit').textContent =
+                '🍎 Apple';
+        }
+    </script>
+
+</body>
+</html>
