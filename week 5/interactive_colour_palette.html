@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Colour Palette</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 36px 20px;
+      font-family: Arial, sans-serif;
+      background: #101a35;
+      color: #f4f7ff;
+    }
+
+    .app {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      color: #72d8ff;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin: 8px 0;
+      font-size: 3rem;
+    }
+
+    .subtitle,
+    .hint {
+      color: #b9c5df;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: #1b2949;
+      border: 1px solid #344667;
+      border-radius: 16px;
+      padding: 14px;
+      margin: 24px 0 18px;
+    }
+
+    input {
+      background: #0e1830;
+      color: white;
+      border: 1px solid #53678d;
+      border-radius: 9px;
+      padding: 11px 12px;
+      min-width: 150px;
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      filter: brightness(1.1);
+    }
+
+    .primary {
+      background: #65d5ff;
+      color: #10203a;
+    }
+
+    .secondary {
+      background: #344767;
+      color: white;
+    }
+
+    .status {
+      min-height: 1.4em;
+      color: #8de7bd;
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .swatch {
+      min-height: 175px;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      border: 1px solid #ffffff25;
+      position: relative;
+
+      /* Smooth expansion animation */
+      transition:
+        min-height 0.35s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .swatch:hover {
+      transform: translateY(-3px);
+    }
+
+    .swatch.expanded {
+      grid-column: span 2;
+      min-height: 250px;
+      box-shadow: 0 14px 36px #00000035;
+    }
+
+    .details {
+      padding: 14px;
+      color: white;
+      text-shadow: 0 1px 4px #0009;
+      background: linear-gradient(transparent, #0005);
+    }
+
+    .swatch.expanded .details {
+      padding: 20px;
+    }
+
+    .hex {
+      font-size: 1.25rem;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+
+    .meta {
+      font-size: 0.8rem;
+      margin-top: 3px;
+    }
+
+    .remove-note {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border-radius: 7px;
+      padding: 5px 8px;
+      font-size: 0.75rem;
+      color: white;
+      background: #0005;
+    }
+
+    .footer {
+      color: #8fa0c0;
+      font-size: 0.82rem;
+      margin-top: 22px;
+    }
+
+    @media (max-width: 650px) {
+      .palette {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .swatch.expanded {
+        grid-column: span 2;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <header>
+      <div class="eyebrow">Colour Lab · Interactive Project</div>
+      <h1>Build your palette.</h1>
+      <p class="subtitle">
+        Explore colours, create your own palette, and export it.
+      </p>
+    </header>
+
+    <form class="toolbar" id="addForm">
+      <label for="hexInput">New hex colour</label>
+
+      <input
+        id="hexInput"
+        type="text"
+        placeholder="#A78BFA"
+        maxlength="7"
+        autocomplete="off"
+      >
+
+      <button class="primary" type="submit">
+        + Add colour
+      </button>
+
+      <button class="secondary" type="button" id="exportBtn">
+        Export PNG
+      </button>
+
+      <button class="secondary" type="button" id="resetBtn">
+        Reset palette
+      </button>
+    </form>
+
+    <p class="hint">
+      Click a box to expand it. Double-click a box to remove it.
+      Enter a 3- or 6-digit hex code.
+    </p>
+
+    <p class="status" id="status" role="status"></p>
+
+    <section class="palette" id="palette"></section>
+
+    <p class="footer">
+      Your palette is saved in this browser using localStorage.
+    </p>
+
+  </main>
+
+  <script>
+    const STORAGE_KEY = "interactive-colour-palette-v1";
+
+    const defaultColours = [
+      "#F97316",
+      "#EC4899",
+      "#8B5CF6",
+      "#06B6D4",
+      "#22C55E",
+      "#FACC15"
+    ];
+
+    const palette = document.getElementById("palette");
+    const form = document.getElementById("addForm");
+    const input = document.getElementById("hexInput");
+    const status = document.getElementById("status");
+
+    let colours = loadColours();
+    let expandedColour = null;
+
+    // Validate and standardise a hex colour.
+    function normaliseHex(value) {
+      let hex = value.trim();
+
+      if (!hex.startsWith("#")) {
+        hex = "#" + hex;
+      }
+
+      // Convert shorthand, e.g. #ABC to #AABBCC.
+      if (/^#[0-9a-fA-F]{3}$/.test(hex)) {
+        hex = "#" + [...hex.slice(1)]
+          .map(character => character + character)
+          .join("");
+      }
+
+      if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+        return hex.toUpperCase();
+      }
+
+      return null;
+    }
+
+    // Restore saved colours from localStorage.
+    function loadColours() {
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem(STORAGE_KEY)
+        );
+
+        if (
+          Array.isArray(saved) &&
+          saved.every(colour => normaliseHex(colour))
+        ) {
+          return saved.map(normaliseHex);
+        }
+      } catch (error) {
+        console.log("Using default colours.");
+      }
+
+      return [...defaultColours];
+    }
+
+    // Save the current colour list.
+    function saveColours() {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(colours)
+        );
+      } catch (error) {
+        announce("Unable to save colours in this browser.");
+      }
+    }
+
+    function announce(message) {
+      status.textContent = message;
+    }
+
+    // Create and display all colour boxes.
+    function render() {
+      palette.replaceChildren();
+
+      colours.forEach((colour, index) => {
+        const card = document.createElement("div");
+
+        card.className = "swatch";
+
+        // Expand the selected box.
+        if (expandedColour === index) {
+          card.classList.add("expanded");
+        }
+
+        card.style.backgroundColor = colour;
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
+        card.setAttribute(
+          "aria-expanded",
+          String(expandedColour === index)
+        );
+
+        const note = document.createElement("span");
+        note.className = "remove-note";
+        note.textContent = "Double-click to remove";
+
+        const details = document.createElement("div");
+        details.className = "details";
+
+        const hex = document.createElement("div");
+        hex.className = "hex";
+        hex.textContent = colour;
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        meta.textContent =
+          expandedColour === index
+            ? `Colour ${index + 1} · Expanded`
+            : `Colour ${index + 1} · Click to expand`;
+
+        details.append(hex, meta);
+        card.append(note, details);
+
+        // Grade 7: click to expand or collapse.
+        card.addEventListener("click", () => {
+          expandedColour =
+            expandedColour === index ? null : index;
+
+          render();
+        });
+
+        // Grade 9: double-click to remove.
+        card.addEventListener("dblclick", event => {
+          event.preventDefault();
+
+          const removedColour = colours[index];
+
+          colours.splice(index, 1);
+          expandedColour = null;
+
+          saveColours();
+          render();
+
+          announce(`Removed ${removedColour}.`);
+        });
+
+        palette.appendChild(card);
+      });
+    }
+
+    // Grade 9: add a new colour.
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const colour = normaliseHex(input.value);
+
+      if (!colour) {
+        announce(
+          "Invalid hex code. Try #A78BFA or #ABC."
+        );
+        input.focus();
+        return;
+      }
+
+      colours.push(colour);
+      expandedColour = colours.length - 1;
+
+      saveColours();
+      render();
+
+      input.value = "";
+      announce(`Added ${colour}.`);
+    });
+
+    // Reset the palette to its original six colours.
+    document.getElementById("resetBtn")
+      .addEventListener("click", () => {
+        colours = [...defaultColours];
+        expandedColour = null;
+
+        saveColours();
+        render();
+
+        announce("Palette reset.");
+      });
+
+    // Extra credit: export the palette as a PNG.
+    function exportPNG() {
+      const canvas = document.createElement("canvas");
+
+      const columns = 3;
+      const cellWidth = 360;
+      const cellHeight = 230;
+      const gap = 18;
+      const padding = 30;
+      const headerHeight = 90;
+
+      const rows = Math.max(
+        1,
+        Math.ceil(colours.length / columns)
+      );
+
+      canvas.width =
+        padding * 2 +
+        columns * cellWidth +
+        (columns - 1) * gap;
+
+      canvas.height =
+        padding * 2 +
+        headerHeight +
+        rows * cellHeight +
+        (rows - 1) * gap;
+
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#101a35";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 36px Arial";
+      ctx.fillText(
+        "My Colour Palette",
+        padding,
+        padding + 38
+      );
+
+      colours.forEach((colour, index) => {
+        const x =
+          padding + (index % columns) * (cellWidth + gap);
+
+        const y =
+          padding +
+          headerHeight +
+          Math.floor(index / columns) * (cellHeight + gap);
+
+        ctx.fillStyle = colour;
+        ctx.beginPath();
+        ctx.roundRect(x, y, cellWidth, cellHeight, 18);
+        ctx.fill();
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "bold 28px Arial";
+        ctx.fillText(
+          colour,
+          x + 20,
+          y + cellHeight - 28
+        );
+      });
+
+      const link = document.createElement("a");
+      link.download = "my-colour-palette.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+
+      announce("Palette exported as PNG.");
+    }
+
+    document.getElementById("exportBtn")
+      .addEventListener("click", exportPNG);
+
+    // Display the saved or default palette on page load.
+    render();
+  </script>
+</body>
+</html>
