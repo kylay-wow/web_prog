@@ -238,12 +238,12 @@
     const STORAGE_KEY = "interactive-colour-palette-v1";
 
     const defaultColours = [
-      "#F97316",
-      "#EC4899",
-      "#8B5CF6",
-      "#06B6D4",
-      "#22C55E",
-      "#FACC15"
+      "#7A3E9D",
+      "#14C88A",
+      "#E9522C",
+      "#A2B824",
+      "#1F4968",
+      "#3B9EBA"
     ];
 
     const palette = document.getElementById("palette");
@@ -355,7 +355,7 @@
         details.append(hex, meta);
         card.append(note, details);
 
-        // Grade 7: click to expand or collapse.
+        // Click to remove colour
         card.addEventListener("click", () => {
           expandedColour =
             expandedColour === index ? null : index;
