@@ -121,7 +121,7 @@
 
   <h1>Student Registration</h1>
 
-  <form method="post" action="/register">
+  <form id="registrationForm" action="#" method="post" novalidate>
 
     <!-- PERSONAL INFORMATION -->
     <fieldset>
@@ -152,6 +152,7 @@
         type="date"
         id="dob"
         name="date_of_birth"
+        required
       >
 
       <label for="major">Major</label>
@@ -234,12 +235,169 @@
   </form>
 
   <script>
-    const codingSlider = document.getElementById("coding-years");
+
+    const form = document.getElementById("registrationForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMessage = document.getElementById("successMessage");
+
+    // Get password fields
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+
+    // Optional coding experience slider
+    const codingYears = document.getElementById("coding-years");
     const yearsValue = document.getElementById("years-value");
 
-    codingSlider.addEventListener("input", function () {
-      yearsValue.textContent = codingSlider.value;
+    // Map each field to its error message element
+    const fields = [
+        {
+            input: document.getElementById("fullName"),
+            error: document.getElementById("nameError")
+        },
+        {
+            input: document.getElementById("studentId"),
+            error: document.getElementById("idError")
+        },
+        {
+            input: document.getElementById("dob"),
+            error: document.getElementById("dobError")
+        },
+        {
+            input: document.getElementById("major"),
+            error: document.getElementById("majorError")
+        },
+        {
+            input: document.getElementById("email"),
+            error: document.getElementById("emailError")
+        },
+        {
+            input: password,
+            error: document.getElementById("passwordError")
+        },
+        {
+            input: confirmPassword,
+            error: document.getElementById("confirmError")
+        }
+    ];
+
+    // Track fields the user has interacted with
+    const touchedFields = new Set();
+
+    // Check that both passwords match
+    function checkPasswordMatch() {
+        if (confirmPassword.value !== password.value) {
+            confirmPassword.setCustomValidity("Passwords do not match.");
+        } else {
+            confirmPassword.setCustomValidity("");
+        }
+    }
+
+    // Display validation errors
+    function updateField(field) {
+        const input = field.input;
+        const error = field.error;
+
+        // Prevent errors if an HTML element is missing
+        if (!input || !error) return;
+
+        if (input.validity.valid) {
+            input.setAttribute("aria-invalid", "false");
+            error.textContent = "";
+            return;
+        }
+
+        input.setAttribute("aria-invalid", "true");
+
+        // Only show error messages after interaction
+        if (!touchedFields.has(input)) {
+            error.textContent = "";
+            return;
+        }
+
+        if (input.validity.valueMissing) {
+            error.textContent = "This field is required.";
+        } else if (input.validity.typeMismatch) {
+            error.textContent = "Please enter a valid email address.";
+        } else if (input.validity.patternMismatch) {
+            error.textContent = "Student ID must contain exactly 9 digits.";
+        } else if (input.validity.tooShort) {
+            error.textContent = "Password must be at least 8 characters.";
+        } else if (input.validity.customError) {
+            error.textContent = input.validationMessage;
+        } else {
+            error.textContent = "Please enter a valid value.";
+        }
+    }
+
+    // Update errors and Submit button
+    function updateForm() {
+        checkPasswordMatch();
+
+        fields.forEach(updateField);
+
+        submitBtn.disabled = !form.checkValidity();
+    }
+
+    // Listen for user input on every field
+    fields.forEach(function(field) {
+        const input = field.input;
+
+        if (!input) return;
+
+        input.setAttribute("aria-invalid", "false");
+
+        input.addEventListener("input", function() {
+            touchedFields.add(input);
+            successMessage.textContent = "";
+            updateForm();
+        });
+
+        input.addEventListener("change", function() {
+            touchedFields.add(input);
+            updateForm();
+        });
+
+        input.addEventListener("blur", function() {
+            touchedFields.add(input);
+            updateForm();
+        });
     });
+
+    // Recheck password confirmation when either password changes
+    password.addEventListener("input", updateForm);
+    confirmPassword.addEventListener("input", updateForm);
+
+    // Optional coding experience slider
+    if (codingYears && yearsValue) {
+        codingYears.addEventListener("input", function() {
+            yearsValue.textContent = codingYears.value;
+        });
+    }
+
+    // Handle submission without sending a POST request to GitHub Pages
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Show errors for all fields if submission is attempted
+        fields.forEach(function(field) {
+            if (field.input) {
+                touchedFields.add(field.input);
+            }
+        });
+
+        updateForm();
+
+        if (form.checkValidity()) {
+            successMessage.textContent =
+                "Registration successful! Your form is valid.";
+        } else {
+            successMessage.textContent = "";
+        }
+    });
+
+    // Initialise the form
+    updateForm();
+
   </script>
 
 </body>
