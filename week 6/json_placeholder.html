@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON placeholder</title>
+    <style>
+        :root {
+            --background: #f7f5f0;
+            --primary: #355747;
+            --main: #292e2b;
+            --accent: #dce5dc;
+            --surface: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: var(--background);
+            color: var(--main);
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: Georgia, serif;
+        }
+
+        #ph-area {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 32px;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        #ph-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        #ph-body {
+            line-height: 1.7;
+        }
+
+        button {
+            margin: 5px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--main);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #spinner {
+            width: 30px;
+            height: 30px;
+            margin: 20px auto;
+            border: 4px solid var(--accent);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            #ph-area {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>JSON placeholder</h1>
+    <nav id="ph-area">
+        <p id="ph-title"></p>
+        <p id="ph-body"></p>
+        <div id="spinner" style="display: none;"></div>
+        <button onclick="placehold()">Load Post</button>
+        <button onclick="nextPost()">Next Post →</button>
+        <p id="post-number">Post: 1</p>
+    </nav>
+    <script>
+        async function placehold(){
+            const button = document.querySelector('button');
+            const originalHTML = button.textContent;
+
+            try{
+                button.disabled = true;
+                button.textContent = 'Loading...';
+                document.getElementById('spinner').style.display = 'block';
+                const res = await fetch(`https://jsonplaceholder.typicode.com/posts`);
+
+                if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+                const data = await res.json();
+                posts = data;
+                currentPost = 0;
+                document.getElementById('post-number').textContent =
+                    `Post: 1 of ${posts.length}`;
+
+                displayPost();
+            }catch (err) {
+                document.getElementById('ph-title').textContent = 'Something went wrong!';
+                document.getElementById('ph-body').textContent = err.message;
+            }finally{
+                document.getElementById('spinner').style.display = 'none';
+                button.disabled=false;
+                button.textContent = originalHTML;
+            }
+        }
+        let posts = [];
+        let currentPost = 0;
+
+        async function nextPost() {
+            if (posts.length === 0) {
+                try {
+                    const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+
+                    if (!res.ok) {
+                        throw new Error(`HTTP error: ${res.status}`);
+                    }
+
+                    posts = await res.json();
+                } catch (err) {
+                    alert('Failed to load posts: ' + err.message);
+                    return;
+                }
+            }
+
+            currentPost = (currentPost + 1) % posts.length;
+            displayPost();
+        }
+
+        function displayPost() {
+            document.getElementById('ph-title').textContent = posts[currentPost].title;
+            document.getElementById('ph-body').textContent = posts[currentPost].body;
+            document.getElementById('post-number').textContent =
+                `Post: ${currentPost + 1} of ${posts.length}`;
+        }
+        placehold()
+    </script>
+</body>
+</html>

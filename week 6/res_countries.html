@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countries</title>
+    <style>
+        :root {
+            --background: #f7f5f0;
+            --primary: #355747;
+            --main: #292e2b;
+            --accent: #dce5dc;
+            --surface: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: var(--background);
+            color: var(--main);
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: Georgia, serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+        }
+
+        #coun-area {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 32px;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        #coun-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        #coun-area p {
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        input {
+            max-width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--main);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #spinner {
+            width: 30px;
+            height: 30px;
+            margin: 20px auto;
+            border: 4px solid var(--accent);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            #coun-area {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Countries</h1>
+    <nav id="coun-area">
+        <p id="coun-name"></p>
+        <button onclick="getCountry()">Click for country information</button>
+        <div id="spinner" style="display: none;"></div>
+        <p id="coun-capital"></p>
+        <p id="coun-region"></p>
+        <p id="coun-population"></p>
+        <label for="country-code">Enter country code (e.g. KR, JP, SG):</label>
+        <input type="text" id="country-code" value="KR" maxlength="2">
+    </nav>
+    <script>
+        async function getCountry(){
+            const button = document.querySelector('button');
+            const originalHTML = button.textContent;
+            try{
+                button.disabled = true;
+                button.textContent = 'Loading...';
+                document.getElementById('spinner').style.display = 'block';
+                const code = document.getElementById('country-code').value.trim().toUpperCase();
+                if (!/^[A-Z]{2}$/.test(code)) {
+                    throw new Error('Enter a valid two-letter country code.');
+                }
+
+                const res = await fetch(`https://countries.dev/alpha/${code}`);
+                if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+
+                const data = await res.json();
+
+                document.getElementById('coun-name').textContent='Name: ' + data.name;
+                document.getElementById('coun-capital').textContent = 'Capital: ' + (data.capital || 'Not available');
+                document.getElementById('coun-region').textContent = 'Region: ' + (data.region || 'Not available');
+
+                document.getElementById('coun-population').textContent = 'Population: ' + (data.population?.toLocaleString() || 'Not available');
+            }catch(err){
+                console.error(err);
+                document.getElementById('coun-capital').textContent = '';
+                document.getElementById('coun-region').textContent = '';
+                document.getElementById('coun-population').textContent = '';
+                document.getElementById('coun-name').textContent=`Error: ${err.message}`;
+            }finally {
+                document.getElementById('spinner').style.display = 'none';
+                button.disabled = false;
+                button.textContent = originalHTML;
+            }
+        }
+        getCountry();
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Seoul weather</title>
+    <style>
+        :root {
+            --background: #f7f5f0;
+            --primary: #355747;
+            --main: #292e2b;
+            --secondary: #777d78;
+            --accent: #dce5dc;
+            --surface: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--main);
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+        }
+
+        #weather-area {
+            max-width: 400px;
+            margin: 25px auto;
+            padding: 25px;
+            background-color: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        #weather-area p {
+            background-color: var(--accent);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real time seoul weather!</h1>
+    <button onclick="getWeather()">Refresh Weather</button>
+    <nav id="weather-area">
+        <div id="spinner" style="display: none;">Loading weather...</div>
+        <p id="temp"></p>
+        <p id="humidity"></p>
+        <p id="precipitate"></p>
+    </nav>
+    <script>
+        async function getWeather(){
+            const button = document.querySelector('button');
+            const originalHTML = button.textContent;
+            try{
+                button.disabled = true;
+                button.textContent = 'Loading...';
+                document.getElementById('spinner').style.display = 'block';
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=37.5&longitude=126.9&current=temperature_2m,relative_humidity_2m,precipitation`)
+                
+                if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+                const data = await res.json();
+
+                document.getElementById('temp').textContent='Current temperature: ' + data.current.temperature_2m + 'deg Celcius';
+                document.getElementById('humidity').textContent='Current humidity: '+data.current.relative_humidity_2m;
+                document.getElementById('precipitate').textContent = 'Current precipitation: ' + data.current.precipitation + ' mm';
+
+            }catch (err) {
+                console.error(err);
+                document.getElementById('temp').textContent = 'Unable to load weather.';
+                document.getElementById('humidity').textContent = '';
+                document.getElementById('precipitate').textContent = err.message;
+            }finally {
+                document.getElementById('spinner').style.display = 'none';
+                button.disabled = false;
+                button.textContent = originalHTML;
+            }
+        }
+
+        getWeather()
+    </script>
+</body>
+</html>

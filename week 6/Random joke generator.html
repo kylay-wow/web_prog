@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API using fetch</title>
+
+    <style>
+        :root{
+            --background: #f7f5f0;
+            --primary: #355747;
+            --main: #292e2b;
+            --secondary: #777d78;
+            --accent: #dce5dc;
+            --surface: #FFFFFF;
+        }
+
+        body{
+            background-color: var(--background);
+            color: var(--main);
+        }
+
+        #joke-area{
+            max-width: 650px;
+            margin: 40px auto 24px;
+            background-color: var(--surface);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0px 8px 30px rgba(0,0,0,0.06);
+        }
+
+        h1{
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-family: serif;
+        }
+
+        #jokeSetup{
+            line-height: 1.6rem;
+            font-size: 1.5rem;
+        }
+
+        #jokePunch{
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        #error {
+            padding: 12px;
+            border-radius: 10px;
+            background-color: #f9eae7;
+            color: #9b3f35;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            color: var(--primary);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover{
+            transform: translateY(-3px);
+            box-shadow: 3px 10px 20px grey;
+            background-color: var(--accent);
+            color: var(--main);
+        }
+
+        button:disabled{
+            background-color: darkgrey;
+            color: grey;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        /* Loading spinner */
+        #spinner {
+            width: 30px;
+            height: 30px;
+            margin: 20px auto;
+            border: 4px solid var(--accent);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media screen and (max-width:600px){
+            body{
+                padding: 40px 18px;
+            }
+            #joke-area{
+                padding: 24px;
+            }
+        }
+
+        #favourites-area {
+            max-width: 650px;
+            margin: 24px auto;
+            padding: 32px;
+            background-color: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        #favourites-list article {
+            padding: 16px;
+            margin-top: 12px;
+            background-color: var(--accent);
+            border-radius: 12px;
+        }
+
+        #favourites-list p {
+            line-height: 1.6;
+        }
+
+        #favourites-area button {
+            margin: 5px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generate a random joke!</h1>
+    <button onclick="loadJoke()">Click to generate a random joke</button>
+    <section id="favourites-area">
+        <h2>⭐ Favourite Jokes</h2>
+        <button onclick="saveFavourite()">Save Current Joke</button>
+        <button onclick="clearFavourites()">Clear Favourites</button>
+        <div id="favourites-list"></div>
+    </section>
+
+    <div id="joke-area">
+        <p id="jokeSetup"></p>
+        <p id="jokePunch"></p>
+        <p id="error"></p>
+        <div id="spinner" style="display: none;"></div>
+    </div>
+    <p id="status"></p>
+
+
+    <script>
+        async function loadJoke(){
+            const button = document.querySelector('button');
+            const originalHTML = button.textContent;
+
+            try{
+                document.getElementById('spinner').style.display = 'block';
+                document.getElementById('error').textContent = '';
+                button.disabled=true;
+                button.textContent="Loading...";
+
+                const res = await fetch(`https://official-joke-api.appspot.com/random_joke`);
+                if (!res.ok) throw new Error('HTTP error: ${res.status}'); 
+
+                const data = await res.json();
+
+                document.getElementById('jokeSetup').textContent = data.setup;
+                document.getElementById('jokePunch').textContent = data.punchline;
+
+            }catch (err){
+                
+                document.getElementById('error').textContent = err.message;
+            }finally{
+                document.getElementById('spinner').style.display = 'none';
+                button.disabled=false;
+                button.textContent = originalHTML;
+            }
+            
+            
+        }
+
+        function saveFavourite() {
+            const setup = document.getElementById('jokeSetup').textContent;
+            const punchline = document.getElementById('jokePunch').textContent;
+
+            if (!setup || !punchline) {
+                alert('Generate a joke first!');
+                return;
+            }
+
+            const favourites = JSON.parse(localStorage.getItem('favouriteJokes')) || [];
+
+            const alreadySaved = favourites.some(
+                joke => joke.setup === setup && joke.punchline === punchline
+            );
+
+            if (alreadySaved) {
+                alert('This joke is already saved!');
+                return;
+            }
+
+            favourites.push({ setup, punchline });
+
+            localStorage.setItem('favouriteJokes', JSON.stringify(favourites));
+
+            displayFavourites();
+        }
+
+        function displayFavourites() {
+            const favourites = JSON.parse(localStorage.getItem('favouriteJokes')) || [];
+            const list = document.getElementById('favourites-list');
+
+            list.replaceChildren();
+
+            if (favourites.length === 0) {
+                list.textContent = 'No favourite jokes saved yet.';
+                return;
+            }
+
+            favourites.forEach((joke, index) => {
+                const article = document.createElement('article');
+
+                const setup = document.createElement('p');
+                setup.textContent = joke.setup;
+
+                const punchline = document.createElement('p');
+                punchline.textContent = joke.punchline;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', () => {
+                    removeFavourite(index);
+                });
+
+                article.append(setup, punchline, removeButton);
+                list.appendChild(article);
+            });
+        }
+
+        function removeFavourite(index) {
+            const favourites = JSON.parse(localStorage.getItem('favouriteJokes')) || [];
+
+            favourites.splice(index, 1);
+
+            localStorage.setItem('favouriteJokes', JSON.stringify(favourites));
+
+            displayFavourites();
+        }
+
+        function clearFavourites() {
+            if (!confirm('Are you sure you want to clear all favourites?')) {
+                return;
+            }
+
+            localStorage.removeItem('favouriteJokes');
+            displayFavourites();
+        }
+
+        displayFavourites();
+    </script>
+</body>
+</html>
+
+<!-- do 6 tasks, with the api -->

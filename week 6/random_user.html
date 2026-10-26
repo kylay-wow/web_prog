@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random user API</title>
+    <style>
+        :root {
+            --background: #f7f5f0;
+            --primary: #355747;
+            --main: #292e2b;
+            --accent: #dce5dc;
+            --surface: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: var(--background);
+            color: var(--main);
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+        }
+
+        #rando-area {
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 32px;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        #rando-pic {
+            display: block;
+            width: 140px;
+            height: 140px;
+            margin: 20px auto;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+        }
+
+        #rando-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        #rando-country,
+        #rando-email,
+        #rando-age {
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        button {
+            margin-top: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--main);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #spinner {
+            width: 30px;
+            height: 30px;
+            margin: 20px auto;
+            border: 4px solid var(--accent);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            #rando-area {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Random User</h1>
+    <nav id="rando-area">
+        <p id="rando-name"></p>
+        <img id="rando-pic" alt="Random user profile picture">
+        <p id="rando-country"></p>
+        <p id="rando-email"></p>
+        <p id="rando-age"></p>
+        <button onclick="rando()">Click for random user</button>
+        <div id="spinner" style="display: none;"></div>
+    </nav>
+    <script>
+        async function rando(){
+            const button = document.querySelector('button');
+            const originalHTML = button.textContent;
+
+            try{
+                button.disabled = true;
+                button.textContent = 'Loading...';
+                document.getElementById('spinner').style.display = 'block';
+                const res = await fetch(`https://randomuser.me/api`);
+                if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+
+                const data = await res.json();
+                const user = data.results[0];
+
+                document.getElementById('rando-name').textContent = 'Name: ' + user.name.first;    
+                document.getElementById('rando-pic').src = user.picture.large;
+                document.getElementById('rando-country').textContent = 'Country: ' + user.location.country;
+                document.getElementById('rando-email').textContent = 'Email: ' + user.email;
+                document.getElementById('rando-age').textContent = 'Age: ' + user.dob.age;
+
+
+            }catch (err) {
+                document.getElementById('rando-name').textContent = 'Something went wrong: ' + err.message;
+            }finally{
+                document.getElementById('spinner').style.display = 'none';
+                button.disabled=false;
+                button.textContent = originalHTML;
+            }
+        }
+        rando()
+    </script>
+</body>
+</html>
