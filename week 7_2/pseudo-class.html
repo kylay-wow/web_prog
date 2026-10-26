@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* :focus — applied when the input has keyboard focus */
+        input:focus {
+        border-color: #1a56db;
+        box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+        outline: none;
+        }
+
+        /* :valid — applied when the value passes all HTML5 validation */
+        input:valid {
+        border-color: #16a34a;    /* green */
+        }
+
+        /* :invalid — applied when the value fails validation */
+        input:invalid {
+        border-color: #dc2626;    /* red */
+        }
+
+        /* :placeholder-shown — only while placeholder is visible */
+        /* (i.e., the field is empty) — combine with :invalid to avoid */
+        /* showing red on an untouched empty required field */
+        input:invalid:not(:placeholder-shown) {
+        border-color: #dc2626;
+        background: #fee2e2;
+        }
+
+        input:valid:not(:placeholder-shown) {
+        border-color: #16a34a;
+        background: #dcfce7;
+        }
+    </style>
+</head>
+<body>
+    <form action="/login" method="post" novalidate>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="pw">Password</label>
+        <input type="password" id="pw" name="password" required>
+
+        <button type="submit">Log In</button>
+    </form>
+</body>
+</html>
