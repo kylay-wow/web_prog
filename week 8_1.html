@@ -237,68 +237,66 @@
   <script>
 
     const form = document.getElementById("registrationForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const successMessage = document.getElementById("successMessage");
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-    // Get password fields
-    const password = document.getElementById("password");
-    const confirmPassword = document.getElementById("confirmPassword");
+    // Find or create the success message
+    let successMessage = document.getElementById("successMessage");
 
-    // Optional coding experience slider
+    if (!successMessage) {
+        successMessage = document.createElement("div");
+        successMessage.id = "successMessage";
+        successMessage.className = "success";
+        successMessage.setAttribute("role", "status");
+        successMessage.setAttribute("aria-live", "polite");
+        form.appendChild(successMessage);
+    }
+
+    // Get the coding experience slider
     const codingYears = document.getElementById("coding-years");
     const yearsValue = document.getElementById("years-value");
 
-    // Map each field to its error message element
+    // Match the IDs in YOUR HTML
     const fields = [
-        {
-            input: document.getElementById("fullName"),
-            error: document.getElementById("nameError")
-        },
-        {
-            input: document.getElementById("studentId"),
-            error: document.getElementById("idError")
-        },
-        {
-            input: document.getElementById("dob"),
-            error: document.getElementById("dobError")
-        },
-        {
-            input: document.getElementById("major"),
-            error: document.getElementById("majorError")
-        },
-        {
-            input: document.getElementById("email"),
-            error: document.getElementById("emailError")
-        },
-        {
-            input: password,
-            error: document.getElementById("passwordError")
-        },
-        {
-            input: confirmPassword,
-            error: document.getElementById("confirmError")
+        { id: "full-name", message: "Full Name is required." },
+        { id: "student-id", message: "Student ID must contain exactly 9 digits." },
+        { id: "dob", message: "Date of Birth is required." },
+        { id: "major", message: "Please select a major." },
+        { id: "email", message: "Please enter a valid email address." },
+        { id: "password", message: "Password must be at least 8 characters." },
+        { id: "phone", message: "Use the format 010-1234-5678." },
+        { id: "terms", message: "You must agree to the terms." }
+    ].map(function (item) {
+        const input = document.getElementById(item.id);
+
+        if (!input) return null;
+
+        // Create an error message element if one doesn't exist
+        let error = document.getElementById(item.id + "Error");
+
+        if (!error) {
+            error = document.createElement("small");
+            error.id = item.id + "Error";
+            error.className = "error";
+            input.insertAdjacentElement("afterend", error);
         }
-    ];
+
+        input.setAttribute("aria-describedby", error.id);
+        input.setAttribute("aria-invalid", "false");
+
+        return {
+            input: input,
+            error: error,
+            message: item.message
+        };
+    }).filter(Boolean);
 
     // Track fields the user has interacted with
     const touchedFields = new Set();
 
-    // Check that both passwords match
-    function checkPasswordMatch() {
-        if (confirmPassword.value !== password.value) {
-            confirmPassword.setCustomValidity("Passwords do not match.");
-        } else {
-            confirmPassword.setCustomValidity("");
-        }
-    }
-
-    // Display validation errors
+    // Validate one field
     function updateField(field) {
         const input = field.input;
         const error = field.error;
-
-        // Prevent errors if an HTML element is missing
-        if (!input || !error) return;
 
         if (input.validity.valid) {
             input.setAttribute("aria-invalid", "false");
@@ -308,81 +306,64 @@
 
         input.setAttribute("aria-invalid", "true");
 
-        // Only show error messages after interaction
         if (!touchedFields.has(input)) {
             error.textContent = "";
             return;
         }
 
         if (input.validity.valueMissing) {
-            error.textContent = "This field is required.";
+            error.textContent = field.message;
         } else if (input.validity.typeMismatch) {
             error.textContent = "Please enter a valid email address.";
         } else if (input.validity.patternMismatch) {
-            error.textContent = "Student ID must contain exactly 9 digits.";
+            error.textContent = field.message;
         } else if (input.validity.tooShort) {
-            error.textContent = "Password must be at least 8 characters.";
-        } else if (input.validity.customError) {
-            error.textContent = input.validationMessage;
+            error.textContent = field.message;
         } else {
             error.textContent = "Please enter a valid value.";
         }
     }
 
-    // Update errors and Submit button
+    // Update all errors and the Submit button
     function updateForm() {
-        checkPasswordMatch();
-
         fields.forEach(updateField);
-
         submitBtn.disabled = !form.checkValidity();
     }
 
-    // Listen for user input on every field
-    fields.forEach(function(field) {
+    // Add listeners to every field
+    fields.forEach(function (field) {
         const input = field.input;
 
-        if (!input) return;
-
-        input.setAttribute("aria-invalid", "false");
-
-        input.addEventListener("input", function() {
+        input.addEventListener("input", function () {
             touchedFields.add(input);
             successMessage.textContent = "";
             updateForm();
         });
 
-        input.addEventListener("change", function() {
+        input.addEventListener("change", function () {
             touchedFields.add(input);
             updateForm();
         });
 
-        input.addEventListener("blur", function() {
+        input.addEventListener("blur", function () {
             touchedFields.add(input);
             updateForm();
         });
     });
 
-    // Recheck password confirmation when either password changes
-    password.addEventListener("input", updateForm);
-    confirmPassword.addEventListener("input", updateForm);
-
-    // Optional coding experience slider
+    // Update the slider number as it moves
     if (codingYears && yearsValue) {
-        codingYears.addEventListener("input", function() {
+        codingYears.addEventListener("input", function () {
             yearsValue.textContent = codingYears.value;
         });
     }
 
-    // Handle submission without sending a POST request to GitHub Pages
-    form.addEventListener("submit", function(event) {
+    // Handle submission without sending a POST request
+    form.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        // Show errors for all fields if submission is attempted
-        fields.forEach(function(field) {
-            if (field.input) {
-                touchedFields.add(field.input);
-            }
+        fields.forEach(function (field) {
+            touchedFields.add(field.input);
         });
 
         updateForm();
