@@ -121,7 +121,7 @@
 
   <h1>Student Registration</h1>
 
-  <form method="post" action="/register">
+  <form id="registrationForm" method="post" action="#" novalidate>
 
     <!-- PERSONAL INFORMATION -->
     <fieldset>
@@ -152,6 +152,7 @@
         type="date"
         id="dob"
         name="date_of_birth"
+        required
       >
 
       <label for="major">Major</label>
@@ -187,6 +188,16 @@
         minlength="8"
         required
       >
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirm_password"
+        placeholder="Re-enter your password"
+        required
+        aria-describedby="confirmError">
+      <small id="confirmError" class="error"></small>
 
       <label for="phone">Phone</label>
       <input
@@ -229,17 +240,184 @@
       <label for="terms">I agree to the terms</label>
     </div>
 
-    <button type="submit">Register</button>
+    <button type="submit" id="submitBtn">Register</button>
+
+    <div id="successMessage" class="success"
+     role="status" aria-live="polite"></div>
 
   </form>
 
   <script>
-    const codingSlider = document.getElementById("coding-years");
+
+    const form = document.getElementById("registrationForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMessage = document.getElementById("successMessage");
+
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+
+    const codingYears = document.getElementById("coding-years");
     const yearsValue = document.getElementById("years-value");
 
-    codingSlider.addEventListener("input", function () {
-      yearsValue.textContent = codingSlider.value;
+    // All form fields and their error message elements
+    const fields = [
+      {
+        input: document.getElementById("full-name"),
+        error: document.getElementById("nameError")
+      },
+      {
+        input: document.getElementById("student-id"),
+        error: document.getElementById("idError")
+      },
+      {
+        input: document.getElementById("dob"),
+        error: document.getElementById("dobError")
+      },
+      {
+        input: document.getElementById("major"),
+        error: document.getElementById("majorError")
+      },
+      {
+        input: document.getElementById("email"),
+        error: document.getElementById("emailError")
+      },
+      {
+        input: password,
+        error: document.getElementById("passwordError")
+      },
+      {
+        input: confirmPassword,
+        error: document.getElementById("confirmError")
+      },
+      {
+        input: document.getElementById("phone"),
+        error: document.getElementById("phoneError")
+      },
+      {
+        input: document.getElementById("terms"),
+        error: document.getElementById("termsError")
+      }
+    ];
+
+    // Track which fields the user has interacted with
+    const touchedFields = new Set();
+
+    // Check that passwords match
+    function checkPasswordMatch() {
+      if (confirmPassword.value !== password.value) {
+        confirmPassword.setCustomValidity("Passwords do not match.");
+      } else {
+        confirmPassword.setCustomValidity("");
+      }
+    }
+
+    // Show validation messages
+    function updateField(field) {
+      const input = field.input;
+      const error = field.error;
+      if (!error) return;
+
+      if (input.validity.valid) {
+        input.setAttribute("aria-invalid", "false");
+        error.textContent = "";
+        return;
+      }
+
+      input.setAttribute("aria-invalid", "true");
+
+      // Do not show errors before the user interacts
+      if (!touchedFields.has(input)) {
+        error.textContent = "";
+        return;
+      }
+
+      if (input.validity.valueMissing) {
+        error.textContent = input.type === "checkbox"
+          ? "You must agree to the terms."
+          : "This field is required.";
+      } else if (input.validity.typeMismatch) {
+        error.textContent = "Please enter a valid email address.";
+      } else if (input.validity.patternMismatch) {
+        if (input.id === "student-id") {
+          error.textContent = "Student ID must contain exactly 9 digits.";
+        } else if (input.id === "phone") {
+          error.textContent = "Use the format 010-1234-5678.";
+        } else {
+          error.textContent = "Please use the required format.";
+        }
+      } else if (input.validity.tooShort) {
+        error.textContent = "Password must be at least 8 characters.";
+      } else if (input.validity.customError) {
+        error.textContent = input.validationMessage;
+      } else {
+        error.textContent = "Please enter a valid value.";
+      }
+    }
+
+    // Update validation and Submit button
+    function updateForm() {
+      checkPasswordMatch();
+
+      fields.forEach(updateField);
+
+      submitBtn.disabled = !form.checkValidity();
+    }
+
+    // Add listeners to every field
+    fields.forEach(function(field) {
+      const input = field.input;
+
+      input.setAttribute("aria-invalid", "false");
+
+      input.addEventListener("input", function() {
+        touchedFields.add(input);
+        successMessage.textContent = "";
+        updateForm();
+      });
+
+      input.addEventListener("change", function() {
+        touchedFields.add(input);
+        updateForm();
+      });
+
+      input.addEventListener("blur", function() {
+        touchedFields.add(input);
+        updateForm();
+      });
     });
+
+    // Recheck password confirmation when either password changes
+    password.addEventListener("input", updateForm);
+    confirmPassword.addEventListener("input", updateForm);
+
+    // Coding experience slider: update displayed number
+    codingYears.addEventListener("input", function() {
+      yearsValue.textContent = codingYears.value;
+    });
+
+    // Prevent normal form submission
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Show errors for all fields when submitted
+      fields.forEach(function(field) {
+        touchedFields.add(field.input);
+      });
+
+      updateForm();
+
+      if (form.checkValidity()) {
+        successMessage.textContent =
+          "Registration successful! Your form is valid.";
+      } else {
+        successMessage.textContent = "";
+      }
+    });
+
+    // Initialise the form
+    updateForm();
+
+
   </script>
 
 </body>

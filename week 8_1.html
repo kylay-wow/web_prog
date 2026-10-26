@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    fieldset {
+      margin-bottom: 20px;
+      padding: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      margin-top: 5px;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+
+    .success {
+      color: green;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 10px 18px;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Student Registration</h1>
+
+  <form id="registrationForm" action="#" method="post" novalidate>
+
+    <fieldset>
+      <legend>Personal Information</legend>
+
+      <label for="fullName">Full Name</label>
+      <input
+        type="text"
+        id="fullName"
+        name="fullName"
+        required
+        aria-describedby="nameError">
+      <small id="nameError" class="error"></small>
+
+      <label for="studentId">Student ID</label>
+      <input
+        type="text"
+        id="studentId"
+        name="studentId"
+        pattern="[0-9]{9}"
+        title="Enter exactly 9 digits"
+        required
+        aria-describedby="idError">
+      <small id="idError" class="error"></small>
+
+      <label for="dob">Date of Birth</label>
+      <input
+        type="date"
+        id="dob"
+        name="dob"
+        aria-describedby="dobError">
+      <small id="dobError" class="error"></small>
+
+      <label for="major">Major</label>
+      <select
+        id="major"
+        name="major"
+        required
+        aria-describedby="majorError">
+        <option value="">Select a major</option>
+        <option value="IT">Information Technology</option>
+        <option value="CS">Computer Science</option>
+        <option value="Business">Business</option>
+        <option value="Design">Design</option>
+      </select>
+      <small id="majorError" class="error"></small>
+    </fieldset>
+
+    <fieldset>
+      <legend>Account Information</legend>
+
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        aria-describedby="emailError">
+      <small id="emailError" class="error"></small>
+
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        minlength="8"
+        required
+        aria-describedby="passwordError">
+      <small id="passwordError" class="error"></small>
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        required
+        aria-describedby="confirmError">
+      <small id="confirmError" class="error"></small>
+    </fieldset>
+
+    <button type="submit" id="submitBtn" disabled>
+      Submit Registration
+    </button>
+
+    <div id="successMessage" class="success"
+         role="status" aria-live="polite"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById("registrationForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMessage = document.getElementById("successMessage");
+
+    // Map every field to its error message element
+    const fields = [
+      {
+        input: document.getElementById("fullName"),
+        error: document.getElementById("nameError")
+      },
+      {
+        input: document.getElementById("studentId"),
+        error: document.getElementById("idError")
+      },
+      {
+        input: document.getElementById("dob"),
+        error: document.getElementById("dobError")
+      },
+      {
+        input: document.getElementById("major"),
+        error: document.getElementById("majorError")
+      },
+      {
+        input: document.getElementById("email"),
+        error: document.getElementById("emailError")
+      },
+      {
+        input: document.getElementById("password"),
+        error: document.getElementById("passwordError")
+      },
+      {
+        input: document.getElementById("confirmPassword"),
+        error: document.getElementById("confirmError")
+      }
+    ];
+
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+
+    // Custom validation for matching passwords
+    function checkPasswordMatch() {
+      if (confirmPassword.value !== password.value) {
+        confirmPassword.setCustomValidity("Passwords do not match.");
+      } else {
+        confirmPassword.setCustomValidity("");
+      }
+    }
+
+    function updateField(field) {
+      const input = field.input;
+      const error = field.error;
+
+      if (input.validity.valid) {
+        input.setAttribute("aria-invalid", "false");
+        error.textContent = "";
+      } else {
+        input.setAttribute("aria-invalid", "true");
+
+        if (input.validity.valueMissing) {
+          error.textContent = "This field is required.";
+        } else if (input.validity.typeMismatch) {
+          error.textContent = "Please enter a valid email address.";
+        } else if (input.validity.patternMismatch) {
+          error.textContent = "Student ID must contain exactly 9 digits.";
+        } else if (input.validity.tooShort) {
+          error.textContent = "Password must be at least 8 characters.";
+        } else if (input.validity.customError) {
+          error.textContent = input.validationMessage;
+        } else {
+          error.textContent = "Please enter a valid value.";
+        }
+      }
+    }
+
+    function updateForm() {
+      checkPasswordMatch();
+
+      fields.forEach(updateField);
+
+      // enable Submit only when every field is valid
+      submitBtn.disabled = !form.checkValidity();
+    }
+
+    // Input/change listeners for all fields
+    fields.forEach(function(field) {
+      field.input.addEventListener("input", function() {
+        successMessage.textContent = "";
+        updateForm();
+      });
+
+      field.input.addEventListener("change", updateForm);
+    });
+
+    // Keep password confirmation updated when either password changes
+    password.addEventListener("input", updateForm);
+    confirmPassword.addEventListener("input", updateForm);
+
+    // Prevent actual form submission and show success message
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      updateForm();
+
+      if (form.checkValidity()) {
+        successMessage.textContent =
+          "Registration successful! Your form is valid.";
+      }
+    });
+
+    // Initialise validation state
+    updateForm();
+  </script>
+</body>
+</html>
