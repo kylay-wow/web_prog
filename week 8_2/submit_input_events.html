@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <!-- novalidate = JS handles ALL validation -->
+    <form id="reg-form" novalidate>
+
+        <label for="email">Email</label>
+
+        <input
+            type="email"
+            id="email"
+            required
+            aria-describedby="email-err"
+            aria-invalid="false"
+        >
+
+        <span id="email-err" role="alert"></span>
+
+        <button type="submit">Register</button>
+
+    </form>
+    
+    <script>
+        // Real-time validation
+        email.addEventListener('input', function() {
+            validateEmail(this);
+        });
+
+        // Final validation before submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (validateAll()) {
+                submitForm();
+            }
+        });
+    </script>
+</body>
+</html>

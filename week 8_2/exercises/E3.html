@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 3</title>
+</head>
+<body>
+    <form id="reg-form" novalidate>
+        <div class="field-group">
+            <label for="stud-id">Student ID</label>
+            <input
+                type="text"
+                id="stud-id"
+                required
+                aria-describedby="stud-err"
+                aria-invalid="false"
+            />
+            <span id="stud-err" role="alert" aria-live="polite"></span>
+        </div>
+
+        <div class="field-group">
+            <label for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                required
+                aria-describedby="email-err"
+                aria-invalid="false"
+            />
+            <span id="email-err" role="alert" aria-live="polite"></span>
+        </div>
+
+        <div class="field-group">
+            <label for="pw">Password</label>
+            <input
+                type="password"
+                id="pw"
+                required
+                minlength = '8'
+                aria-describedby="pw-err"
+                aria-invalid="false"
+            />
+            <span id="pw-err" role="alert" aria-live="polite"></span>
+        </div>
+
+        <div class="field-group">
+            <label for="phone">Phone</label>
+            <input
+                type="tel"
+                id="phone"
+                required
+                aria-describedby="phone-err"
+                aria-invalid="false"
+            />
+            <span id="phone-err" role="alert" aria-live="polite"></span>
+        </div>
+
+        <button type="submit" disabled>Register</button>
+    </form>
+
+    <script>
+        const studIDpattern = /^\d{9}$/
+        const phoneNum = /^\d{3}-\d{4}-\d{4}$/
+        const studID = document.getElementById('stud-id');
+        const email = document.getElementById('email');
+        const pw = document.getElementById('pw');
+        const phone = document.getElementById('phone');
+        const submitBtn = document.querySelector('button[type="submit"]');
+        
+        function validateStudentId(input){
+            const err = document.getElementById('stud-err');
+            if (!studIDpattern.test(input.value)){
+                err.textContent = 'Invalid student ID';
+                input.setAttribute('aria-invalid', 'true')
+            }else{
+                err.textContent ='';
+                input.setAttribute('aria-invalid', 'false');
+            }
+        }
+
+        function checkEmail(input){
+            const err = document.getElementById('email-err');
+
+            if (input.validity.valueMissing){
+                err.textContent = 'Email is required';
+                input.setAttribute('aria-invalid', 'true');
+            }else if (input.validity.typeMismatch){
+                err.textContent = 'Invalid email';
+                input.setAttribute('aria-invalid', 'true');
+            }else{
+                err.textContent='';
+                input.setAttribute('aria-invalid', 'false');
+            }
+        }
+
+        function checkPw(input){
+            const err = document.getElementById('pw-err');
+
+            if (pw.validity.tooShort){
+                err.textContent='Password must be at least 8 characters';
+            }else{
+                err.textContent = '';
+            }
+        }
+
+        function phoneCheck(input){
+            const err = document.getElementById('phone-err');
+
+            if (!phoneNum.test(input.value)){
+                err.textContent = 'Invalid phone number';
+                input.setAttribute('aria-invalid', 'true');
+            }else{
+                err.textContent = '';
+                input.setAttribute("aria-invalid", 'false')
+            }
+        }
+
+
+        function checkAll(){
+            validateStudentId(studID);
+            checkEmail(email);
+            checkPw(pw);
+            phoneCheck(phone);
+
+            const allValid =
+                studIDpattern.test(studID.value) &&
+                email.validity.valid &&
+                pw.value.length >=8 &&
+                phoneNum.test(phone.value);
+            
+            submitBtn.disabled = !allValid
+        }
+
+        studID.addEventListener('input', checkAll);
+        email.addEventListener('input', checkAll);
+        pw.addEventListener('input', checkAll);
+        phone.addEventListener('input', checkAll);
+
+    </script>
+
+</body>
+</html>

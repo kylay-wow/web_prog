@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge 1</title>
+</head>
+<body>
+    <div class="field-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" required
+        aria-describedby="username-err"
+        aria-invalid="false"
+        placeholder="At least 3 alphanumeric chars">
+    <span id="username-err" role="alert"
+        style="color:red;font-size:12px"></span>
+    </div>
+
+    <script>
+    const usernameInput = document.getElementById('username');
+    const usernamePattern = /^[a-zA-Z0-9]{3,}$/;
+
+    // TODO: write validateUsername(input) here
+    function validateUsername(input){
+        const err = document.getElementById('username-err');
+
+        if (input.validity.valueMissing){
+            err.textContent = 'Username required';
+            input.style.borderColor='red';
+        }else if (!usernamePattern.test(input.value)){
+            err.textContent = 'Invalid username';
+            input.style.borderColor = 'red';
+            input.setAttribute('aria-invalid', 'true');
+        }else{
+            err.textContent='';
+            input.style.borderColor = 'green';
+            input.setAttribute('aria-invalid', 'false');
+        }
+    }
+    // TODO: add event listener for 'input' event
+    usernameInput.addEventListener('input',function(){
+        validateUsername(this);
+    })
+
+</script>
+</body>
+</html>
