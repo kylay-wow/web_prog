@@ -35,6 +35,7 @@
             if (pw.validity.tooShort){
                 err.textContent='Password too short'
             }else{
+                err.textContent='';
                 pw.style.borderColor = 'green';
             }
             if (pw2.value === ''){
