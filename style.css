@@ -25,6 +25,16 @@ body {
     padding: 0 20px;
 }
 
+/* Keyboard accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #e3761d;
+    outline-offset: 3px;
+}
+
 
 /* =========================
    Header / Navigation
@@ -32,6 +42,34 @@ body {
 
 .site-header {
     background-color: #2c3e50;
+}
+
+.skip-link {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1000;
+
+    padding: 12px 20px;
+    background-color: #ffffff;
+    color: #2c3e50;
+
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-decoration: none;
+
+    border: 2px solid #2c3e50;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    transform: translateY(-150%);
+    transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    outline: 3px solid #e67e22;
+    outline-offset: 3px;
 }
 
 .navbar {
@@ -287,7 +325,7 @@ body {
     border-top: 1px solid #ddd;
     margin-top: 15px;
     padding-top: 12px;
-    color: #666;
+    color: #595959;
 }
 
 
@@ -391,7 +429,7 @@ body {
     text-align: center;
     padding: 25px 20px;
 
-    color: #777;
+    color: #595959;
     font-size: 0.9rem;
 
     border-top: 1px solid #ddd;

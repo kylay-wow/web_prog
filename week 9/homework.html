@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website accessibility audit and improvement report.">
+  <title>Accessibility Audit Report</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #F7F8F6;
+      color: #202820;
+      line-height: 1.7;
+    }
+
+    /* Skip link: visible only when keyboard-focused */
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translate(-50%, -160%);
+      z-index: 1000;
+      padding: 8px 16px;
+      background: #173D2A;
+      color: #FFFFFF;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus {
+      transform: translate(-50%, 0);
+      outline: 3px solid #174FBC;
+      outline-offset: 3px;
+    }
+
+    /* Top navigation */
+    .topbar {
+      background: #FFFFFF;
+      border-bottom: 1px solid #D5DDD6;
+      padding: 15px 24px;
+    }
+
+    .nav-inner {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand {
+      color: #173D2A;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #39473D;
+      font-size: 13px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover {
+      color: #174FBC;
+      text-decoration: underline;
+    }
+
+    /* Visible focus for keyboard users */
+    a:focus-visible {
+      outline: 3px solid #174FBC;
+      outline-offset: 4px;
+      border-radius: 3px;
+    }
+
+    main:focus {
+      outline: none;
+    }
+
+    .report {
+      max-width: 900px;
+      margin: auto;
+      padding: 48px 24px;
+    }
+
+    .header {
+      margin-bottom: 42px;
+    }
+
+    .eyebrow {
+      color: #315D42;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 44px);
+      margin: 8px 0;
+      letter-spacing: -1.5px;
+      line-height: 1.2;
+    }
+
+    .description {
+      color: #46534A;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 48px;
+      scroll-margin-top: 30px;
+    }
+
+    .section-heading {
+      font-size: 20px;
+      margin-bottom: 17px;
+      letter-spacing: -0.4px;
+    }
+
+    .section-intro {
+      color: #46534A;
+      font-size: 13px;
+      margin-top: -10px;
+      margin-bottom: 16px;
+    }
+
+    /* Lighthouse scores */
+    .score-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .score-card {
+      background: #FFFFFF;
+      border: 1px solid #C7D0C9;
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .score-card p {
+      color: #46534A;
+      font-size: 13px;
+    }
+
+    .score {
+      font-size: 2.2rem !important;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 10px 0;
+    }
+
+    .before {
+      color: #854500;
+    }
+
+    .after {
+      color: #205B37;
+    }
+
+    /* Issues */
+    .issue-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .issue {
+      background: #FFFFFF;
+      border: 1px solid #C7D0C9;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+
+    .issue h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .issue p {
+      font-size: 13px;
+      color: #46534A;
+    }
+
+    .status {
+      display: inline-block;
+      color: #174B2D;
+      background: #E5F1E8;
+      border: 1px solid #A9C9B1;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    /* Code comparisons */
+    .change-card {
+      background: #FFFFFF;
+      border: 1px solid #C7D0C9;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 15px;
+    }
+
+    .change-card h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .change-card > p {
+      font-size: 13px;
+      color: #46534A;
+      margin-bottom: 16px;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .code-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #39473D;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    pre {
+      background: #EDF0ED;
+      border: 1px solid #C7D0C9;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #202820;
+    }
+
+    .explanation {
+      margin-top: 13px;
+      font-size: 13px;
+      color: #315D42;
+    }
+
+    footer {
+      border-top: 1px solid #C7D0C9;
+      padding-top: 20px;
+      font-size: 12px;
+      color: #46534A;
+    }
+
+    @media (max-width: 600px) {
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+
+      .score-grid,
+      .code-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report {
+        padding: 32px 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .skip-link {
+        transition: none;
+      }
+    }
+
+    .score-image {
+      width: 100%;
+      min-height: 180px;
+      margin-top: 20px;
+      padding: 12px;
+      background: #f4f7fe;
+      border: 2px dashed #3a63d0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-image img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .image-caption {
+      margin-top: 10px;
+      color: #0e2466;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Skip navigation -->
+  <a class="skip-link" href="#main-content">
+    Skip to main content
+  </a>
+
+  <!-- Navigation -->
+  <nav class="topbar" aria-label="Report navigation">
+    <div class="nav-inner">
+      <a href="#top" class="brand">ACCESSIBILITY / REPORT</a>
+
+      <ul class="nav-links">
+        <li><a href="#scores">Scores</a></li>
+        <li><a href="#issues">Issues</a></li>
+        <li><a href="#improvements">Improvements</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="header report" id="top">
+    <p class="eyebrow">Website Audit / 2026</p>
+    <h1>Accessibility Report</h1>
+    <p class="description">
+      Evaluating accessibility issues and documenting improvements
+      made to enhance the website experience.
+    </p>
+  </header>
+
+  <main id="main-content" class="report" tabindex="-1">
+
+    <!-- 01: Scores -->
+    <section id="scores" aria-labelledby="scores-heading">
+      <h2 class="section-heading" id="scores-heading">
+        01 — Lighthouse Results
+      </h2>
+
+      <p class="section-intro">
+        Comparison of accessibility scores before and after improvements.
+      </p>
+
+      <div class="score-grid">
+
+        <div class="score-card before">
+          <h3>Initial Accessibility Score</h3>
+          <p class="score">91</p>
+
+          <div class="score-image">
+            <img
+              src="Screenshot 2026-10-31 182246.png"
+              alt="Lighthouse accessibility score before improvements"
+            >
+          </div>
+          <p class="image-caption">Before accessibility improvements</p>
+        </div>
+
+        <div class="score-card after">
+          <h3>Final Accessibility Score</h3>
+          <p class="score">100</p>
+
+          <div class="score-image">
+            <img
+              src="Screenshot 2026-10-31 185251.png"
+              alt="Lighthouse accessibility score after improvements"
+            >
+          </div>
+          <p class="image-caption">After accessibility improvements</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 02: Issues -->
+    <section id="issues" aria-labelledby="issues-heading">
+      <h2 class="section-heading" id="issues-heading">
+        02 — Areas for Improvement
+      </h2>
+
+      <div class="issue-list">
+
+        <article class="issue">
+          <h3>Colour Contrast</h3>
+          <p>
+            Text and background combinations did not provide sufficient
+            contrast, making content difficult for some users to read.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+        <article class="issue">
+          <h3>Missing Image Alternative Text</h3>
+          <p>
+            Images lacked descriptive alt attributes, preventing
+            screen reader users from understanding meaningful images.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+        <article class="issue">
+          <h3>Form Labels</h3>
+          <p>
+            Some form inputs did not have properly associated labels,
+            making their purpose unclear to assistive technologies.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+        <article class="issue">
+          <h3>Non-semantic Interactive Elements</h3>
+          <p>
+            Some clickable div elements were used instead of native
+            buttons, limiting expected keyboard interaction.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+        <article class="issue">
+          <h3>ARIA Attribute Errors</h3>
+          <p>
+            Incorrect or invalid ARIA attributes can cause accessible
+            names, roles or relationships to be interpreted incorrectly.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+        <article class="issue">
+          <h3>Keyboard Accessibility</h3>
+          <p>
+            Interactive elements need to be reachable and usable
+            through keyboard navigation, with visible focus indicators.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 03: Improvements -->
+    <section id="improvements" aria-labelledby="improvements-heading">
+      <h2 class="section-heading" id="improvements-heading">
+        03 — Improvements Implemented
+      </h2>
+
+      <article class="change-card">
+        <h3>01. Colour Contrast</h3>
+        <p>Changed low-contrast text colours to darker colours.</p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>color: #5B82E0;
+background: #FFFFFF;</code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>color: #0E2466;
+background: #FFFFFF;</code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Increased text contrast to meet the WCAG AA 4.5:1 requirement
+          for normal-sized text.
+        </p>
+      </article>
+
+      <article class="change-card">
+        <h3>02. Image Alternative Text</h3>
+        <p>Added descriptive alt attributes to meaningful images.</p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>&lt;img src="event.jpg"&gt;</code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>&lt;img
+  src="event.jpg"
+  alt="Students at a campus event"
+&gt;</code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Alternative text communicates meaningful image content
+          to screen reader users.
+        </p>
+      </article>
+
+      <article class="change-card">
+        <h3>03. Form Labels</h3>
+        <p>Associated labels with their corresponding input fields.</p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>&lt;input
+  type="email"
+  placeholder="Email"
+&gt;</code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>&lt;label for="email"&gt;
+  Email
+&lt;/label&gt;
+
+&lt;input
+  type="email"
+  id="email"
+&gt;</code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Explicit label associations help assistive technologies
+          identify the purpose of form inputs.
+        </p>
+      </article>
+
+      <article class="change-card">
+        <h3>04. Semantic Buttons</h3>
+        <p>Replaced generic clickable div elements with native buttons.</p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>&lt;div onclick="filterEvents()"&gt;
+  Filter
+&lt;/div&gt;</code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>&lt;button
+  type="button"
+  onclick="filterEvents()"
+&gt;
+  Filter
+&lt;/button&gt;</code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Native buttons provide built-in keyboard support and
+          communicate their interactive role.
+        </p>
+      </article>
+
+      <article class="change-card">
+        <h3>05. ARIA Attribute Errors</h3>
+        <p>Corrected invalid ARIA relationships and accessible names.</p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>&lt;button
+  aria-labelledby="missing-title"
+&gt;
+  Submit
+&lt;/button&gt;</code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>&lt;button
+  aria-label="Submit form"
+&gt;
+  Submit
+&lt;/button&gt;</code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Ensured ARIA attributes reference valid elements and
+          provide accessible names where needed.
+        </p>
+      </article>
+
+      <article class="change-card">
+        <h3>06. Keyboard Navigation</h3>
+        <p>Added a skip link, navigable section links and visible focus states.</p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>/* No visible focus
+   styling */</code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>a:focus-visible {
+  outline: 3px solid #174FBC;
+  outline-offset: 4px;
+}</code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Users can navigate the report using Tab and Shift + Tab
+          while seeing which link currently has keyboard focus.
+        </p>
+      </article>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
