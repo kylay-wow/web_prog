@@ -421,35 +421,8 @@
         <article class="issue">
           <h3>Colour Contrast</h3>
           <p>
-            Text and background combinations did not provide sufficient
-            contrast, making content difficult for some users to read.
-          </p>
-          <span class="status">Addressed</span>
-        </article>
-
-        <article class="issue">
-          <h3>Missing Image Alternative Text</h3>
-          <p>
-            Images lacked descriptive alt attributes, preventing
-            screen reader users from understanding meaningful images.
-          </p>
-          <span class="status">Addressed</span>
-        </article>
-
-        <article class="issue">
-          <h3>Form Labels</h3>
-          <p>
-            Some form inputs did not have properly associated labels,
-            making their purpose unclear to assistive technologies.
-          </p>
-          <span class="status">Addressed</span>
-        </article>
-
-        <article class="issue">
-          <h3>Non-semantic Interactive Elements</h3>
-          <p>
-            Some clickable div elements were used instead of native
-            buttons, limiting expected keyboard interaction.
+            Some text and background combinations had insufficient
+            contrast, making information harder to read.
           </p>
           <span class="status">Addressed</span>
         </article>
@@ -457,17 +430,19 @@
         <article class="issue">
           <h3>ARIA Attribute Errors</h3>
           <p>
-            Incorrect or invalid ARIA attributes can cause accessible
-            names, roles or relationships to be interpreted incorrectly.
+            Some ARIA roles and attributes were not appropriately
+            matched. Filter controls also required more suitable
+            ARIA states and accessible labels.
           </p>
           <span class="status">Addressed</span>
         </article>
 
         <article class="issue">
-          <h3>Keyboard Accessibility</h3>
+          <h3>HTML Semantics</h3>
           <p>
-            Interactive elements need to be reachable and usable
-            through keyboard navigation, with visible focus indicators.
+            Some structural elements used generic div elements
+            instead of more meaningful HTML elements, such as
+            section and heading elements.
           </p>
           <span class="status">Addressed</span>
         </article>
@@ -475,175 +450,193 @@
       </div>
     </section>
 
+
     <!-- 03: Improvements -->
     <section id="improvements" aria-labelledby="improvements-heading">
       <h2 class="section-heading" id="improvements-heading">
         03 — Improvements Implemented
       </h2>
 
+      <!-- 01: Colour Contrast -->
       <article class="change-card">
         <h3>01. Colour Contrast</h3>
-        <p>Changed low-contrast text colours to darker colours.</p>
+        <p>
+          Changed the text colours of the page subtitle, filter buttons,
+          event type buttons and event metadata to darker colours.
+        </p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>color: #5B82E0;
-background: #FFFFFF;</code></pre>
+            <pre><code>
+      .page-sub {
+          color: #5B82E0;
+      }
+
+      .forum-tab {
+          color: #5B82E0;
+      }
+
+      .events-type-btn {
+          color: #5B82E0;
+      }
+
+      .event-card-meta {
+          color: #5B82E0;
+      }</code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>color: #0E2466;
-background: #FFFFFF;</code></pre>
+            <pre><code>.page-sub {
+          color: #0E2466;
+      }
+
+      .forum-tab {
+          color: #0E2466;
+      }
+
+      .events-type-btn {
+          color: #0E2466;
+      }
+
+      .event-card-meta {
+          color: #0E2466;
+      }</code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Increased text contrast to meet the WCAG AA 4.5:1 requirement
-          for normal-sized text.
+          Improved text readability by using darker text colours
+          against the existing backgrounds.
         </p>
       </article>
 
+
+      <!-- 02: ARIA Attributes in HTML -->
       <article class="change-card">
-        <h3>02. Image Alternative Text</h3>
-        <p>Added descriptive alt attributes to meaningful images.</p>
+        <h3>02. ARIA Attributes — HTML</h3>
+        <p>
+          Updated the ARIA roles and states of the time filter buttons,
+          removed unnecessary labels from points badges and added
+          descriptive labels to RSVP buttons.
+        </p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>&lt;img src="event.jpg"&gt;</code></pre>
+            <pre><code>&lt;div role="tablist"
+        aria-label="Event time filter"&gt;
+
+      &lt;button role="tab"
+              aria-selected="true"&gt;
+        Upcoming
+      &lt;/button&gt;
+
+    &lt;/div&gt;
+
+    &lt;span aria-label="Earn 60 points"&gt;
+      +60 pts
+    &lt;/span&gt;</code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>&lt;img
-  src="event.jpg"
-  alt="Students at a campus event"
-&gt;</code></pre>
+            <pre><code>&lt;div role="group"
+        aria-label="Filter events by time"&gt;
+
+      &lt;button aria-pressed="true"&gt;
+        Upcoming
+      &lt;/button&gt;
+
+    &lt;/div&gt;
+
+    &lt;span&gt;+60 pts&lt;/span&gt;
+
+    &lt;button
+      aria-label="RSVP for hiking trip"&gt;
+      RSVP
+    &lt;/button&gt;</code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Alternative text communicates meaningful image content
-          to screen reader users.
+          Used more appropriate ARIA roles and states, while providing
+          additional context for RSVP buttons.
         </p>
       </article>
 
+
+      <!-- 03: ARIA Attributes in JavaScript -->
       <article class="change-card">
-        <h3>03. Form Labels</h3>
-        <p>Associated labels with their corresponding input fields.</p>
+        <h3>03. ARIA Attributes — JavaScript</h3>
+        <p>
+          Restricted the time filter selector so that JavaScript
+          updates only the filter buttons instead of also selecting
+          the event cards.
+        </p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>&lt;input
-  type="email"
-  placeholder="Email"
-&gt;</code></pre>
+            <pre><code>const timeTabs =
+      document.querySelectorAll(
+        '[data-filter]'
+      );</code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>&lt;label for="email"&gt;
-  Email
-&lt;/label&gt;
-
-&lt;input
-  type="email"
-  id="email"
-&gt;</code></pre>
+            <pre><code>const timeTabs =
+      document.querySelectorAll(
+        '.forum-filter-tabs button[data-filter]'
+      );</code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Explicit label associations help assistive technologies
-          identify the purpose of form inputs.
+          Prevented the filter script from applying tab-related
+          ARIA states to event cards that are not tab elements.
         </p>
       </article>
 
+
+      <!-- 04: Semantic HTML -->
       <article class="change-card">
-        <h3>04. Semantic Buttons</h3>
-        <p>Replaced generic clickable div elements with native buttons.</p>
-
-        <div class="code-grid">
-          <div>
-            <p class="code-label">Before</p>
-            <pre><code>&lt;div onclick="filterEvents()"&gt;
-  Filter
-&lt;/div&gt;</code></pre>
-          </div>
-
-          <div>
-            <p class="code-label">After</p>
-            <pre><code>&lt;button
-  type="button"
-  onclick="filterEvents()"
-&gt;
-  Filter
-&lt;/button&gt;</code></pre>
-          </div>
-        </div>
-
-        <p class="explanation">
-          Native buttons provide built-in keyboard support and
-          communicate their interactive role.
+        <h3>04. Semantic HTML Elements</h3>
+        <p>
+          Replaced generic structural div elements with more
+          meaningful HTML elements for the events listing and
+          event headings.
         </p>
-      </article>
-
-      <article class="change-card">
-        <h3>05. ARIA Attribute Errors</h3>
-        <p>Corrected invalid ARIA relationships and accessible names.</p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>&lt;button
-  aria-labelledby="missing-title"
-&gt;
-  Submit
-&lt;/button&gt;</code></pre>
+            <pre><code>&lt;div class="events-grid"&gt;
+
+      &lt;div class="event-card-title"&gt;
+        Hiking Trip
+      &lt;/div&gt;
+
+    &lt;/div&gt;</code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>&lt;button
-  aria-label="Submit form"
-&gt;
-  Submit
-&lt;/button&gt;</code></pre>
+            <pre><code>&lt;section class="events-grid"&gt;
+
+      &lt;h2 class="event-card-title"&gt;
+        Hiking Trip
+      &lt;/h2&gt;
+
+    &lt;/section&gt;</code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Ensured ARIA attributes reference valid elements and
-          provide accessible names where needed.
-        </p>
-      </article>
-
-      <article class="change-card">
-        <h3>06. Keyboard Navigation</h3>
-        <p>Added a skip link, navigable section links and visible focus states.</p>
-
-        <div class="code-grid">
-          <div>
-            <p class="code-label">Before</p>
-            <pre><code>/* No visible focus
-   styling */</code></pre>
-          </div>
-
-          <div>
-            <p class="code-label">After</p>
-            <pre><code>a:focus-visible {
-  outline: 3px solid #174FBC;
-  outline-offset: 4px;
-}</code></pre>
-          </div>
-        </div>
-
-        <p class="explanation">
-          Users can navigate the report using Tab and Shift + Tab
-          while seeing which link currently has keyboard focus.
+          Improved the document structure and made the content
+          easier for assistive technologies to interpret.
         </p>
       </article>
 
