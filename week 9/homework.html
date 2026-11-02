@@ -360,7 +360,7 @@
 
   <header class="header report" id="top">
     <p class="eyebrow">Website Audit / 2026</p>
-    <h1>Accessibility Report(on Landed website group project-events page)</h1>
+    <h1>Accessibility Report</h1>
     <p class="description">
       Evaluating accessibility issues and documenting improvements
       made to enhance the website experience.
@@ -387,7 +387,7 @@
 
           <div class="score-image">
             <img
-              src="Screenshot 2026-10-31 182246.png"
+              src="Screenshot 2026-11-02 145618.png"
               alt="Lighthouse accessibility score before improvements"
             >
           </div>
@@ -400,7 +400,7 @@
 
           <div class="score-image">
             <img
-              src="Screenshot 2026-10-31 185251.png"
+              src="Screenshot 2026-11-02 152557.png"
               alt="Lighthouse accessibility score after improvements"
             >
           </div>
@@ -421,28 +421,29 @@
         <article class="issue">
           <h3>Colour Contrast</h3>
           <p>
-            Some text and background combinations had insufficient
-            contrast, making information harder to read.
+            Some text used a lighter foreground colour against the
+            background, resulting in insufficient contrast and reduced
+            readability.
           </p>
           <span class="status">Addressed</span>
         </article>
 
         <article class="issue">
-          <h3>ARIA Attribute Errors</h3>
+          <h3>HTML List Structure</h3>
           <p>
-            Some ARIA roles and attributes were not appropriately
-            matched. Filter controls also required more suitable
-            ARIA states and accessible labels.
+            Some list items were placed outside their parent unordered
+            list element, resulting in an incorrect HTML structure.
           </p>
           <span class="status">Addressed</span>
         </article>
 
+        <div class="issue-list">
+
         <article class="issue">
-          <h3>HTML Semantics</h3>
+          <h3>Missing skip to content using tab button</h3>
           <p>
-            Some structural elements used generic div elements
-            instead of more meaningful HTML elements, such as
-            section and heading elements.
+            This was not reported by the Lighthouse but it was mentioned in 
+            the study guide about keyboard navigation.
           </p>
           <span class="status">Addressed</span>
         </article>
@@ -461,184 +462,122 @@
       <article class="change-card">
         <h3>01. Colour Contrast</h3>
         <p>
-          Changed the text colours of the page subtitle, filter buttons,
-          event type buttons and event metadata to darker colours.
+          Changed the foreground text colour from #777 to #595959
+          to improve contrast against the existing background.
         </p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>
-      .page-sub {
-          color: #5B82E0;
-      }
+            <pre><code>.site-footer {
+    text-align: center;
+    padding: 25px 20px;
 
-      .forum-tab {
-          color: #5B82E0;
-      }
+    color: #777;
+    font-size: 0.9rem;
 
-      .events-type-btn {
-          color: #5B82E0;
-      }
-
-      .event-card-meta {
-          color: #5B82E0;
-      }</code></pre>
+    border-top: 1px solid #ddd;
+}
+          </code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>.page-sub {
-          color: #0E2466;
-      }
+            <pre><code>.site-footer {
+    text-align: center;
+    padding: 25px 20px;
 
-      .forum-tab {
-          color: #0E2466;
-      }
+    color: #595959;
+    font-size: 0.9rem;
 
-      .events-type-btn {
-          color: #0E2466;
-      }
+    border-top: 1px solid #ddd;
+}
 
-      .event-card-meta {
-          color: #0E2466;
-      }</code></pre>
+       </code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Improved text readability by using darker text colours
-          against the existing backgrounds.
+          Used a darker foreground colour to improve text contrast
+          and make event information easier to read.
         </p>
       </article>
 
 
-      <!-- 02: ARIA Attributes in HTML -->
+      <!-- 02: HTML List Structure -->
       <article class="change-card">
-        <h3>02. ARIA Attributes — HTML</h3>
+        <h3>02. HTML List Structure</h3>
         <p>
-          Updated the ARIA roles and states of the time filter buttons,
-          removed unnecessary labels from points badges and added
-          descriptive labels to RSVP buttons.
+          Moved the list divider and exercise items inside the
+          unordered list to ensure all list items are correctly
+          contained within their parent ul element.
         </p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>&lt;div role="tablist"
-        aria-label="Event time filter"&gt;
+            <pre><code>&lt;ul&gt;
+        &lt;li&gt;Exercise 1&lt;/li&gt;
+      &lt;/ul&gt;
 
-      &lt;button role="tab"
-              aria-selected="true"&gt;
-        Upcoming
-      &lt;/button&gt;
+      &lt;li class="day-divider"&gt;
+        JS Form Validation
+      &lt;/li&gt;
 
-    &lt;/div&gt;
-
-    &lt;span aria-label="Earn 60 points"&gt;
-      +60 pts
-    &lt;/span&gt;</code></pre>
+      &lt;ul&gt;
+        &lt;li&gt;Exercise 2&lt;/li&gt;
+      &lt;/ul&gt;</code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>&lt;div role="group"
-        aria-label="Filter events by time"&gt;
+            <pre><code>&lt;ul&gt;
+        &lt;li&gt;Exercise 1&lt;/li&gt;
 
-      &lt;button aria-pressed="true"&gt;
-        Upcoming
-      &lt;/button&gt;
+        &lt;li class="day-divider"&gt;
+          JS Form Validation
+        &lt;/li&gt;
 
-    &lt;/div&gt;
-
-    &lt;span&gt;+60 pts&lt;/span&gt;
-
-    &lt;button
-      aria-label="RSVP for hiking trip"&gt;
-      RSVP
-    &lt;/button&gt;</code></pre>
+        &lt;li&gt;Exercise 2&lt;/li&gt;
+      &lt;/ul&gt;</code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Used more appropriate ARIA roles and states, while providing
-          additional context for RSVP buttons.
+          Fixed the HTML hierarchy by keeping all list items
+          within one unordered list, resulting in more valid and
+          meaningful HTML structure.
         </p>
       </article>
 
-
-      <!-- 03: ARIA Attributes in JavaScript -->
+      <!-- 03: Skip to main content -->
       <article class="change-card">
-        <h3>03. ARIA Attributes — JavaScript</h3>
+        <h3>03. Skip to weekly exercises</h3>
         <p>
-          Restricted the time filter selector so that JavaScript
-          updates only the filter buttons instead of also selecting
-          the event cards.
+          Added a skip to weekly exercise that appears when pressing 'tab' button 
+          on keyboard.
         </p>
 
         <div class="code-grid">
           <div>
             <p class="code-label">Before</p>
-            <pre><code>const timeTabs =
-      document.querySelectorAll(
-        '[data-filter]'
-      );</code></pre>
+            <pre><code>N/A - Skip link was missing at the start.</code></pre>
           </div>
 
           <div>
             <p class="code-label">After</p>
-            <pre><code>const timeTabs =
-      document.querySelectorAll(
-        '.forum-filter-tabs button[data-filter]'
-      );</code></pre>
+            <pre><code>&lt;a href="#weeks" class="skip-link"&gt;
+          Skip to Weekly exercises
+        &lt;/a&gt;</code></pre>
           </div>
         </div>
 
         <p class="explanation">
-          Prevented the filter script from applying tab-related
-          ARIA states to event cards that are not tab elements.
+          Used a darker foreground colour to improve text contrast
+          and make event information easier to read.
         </p>
       </article>
 
-
-      <!-- 04: Semantic HTML -->
-      <article class="change-card">
-        <h3>04. Semantic HTML Elements</h3>
-        <p>
-          Replaced generic structural div elements with more
-          meaningful HTML elements for the events listing and
-          event headings.
-        </p>
-
-        <div class="code-grid">
-          <div>
-            <p class="code-label">Before</p>
-            <pre><code>&lt;div class="events-grid"&gt;
-
-      &lt;div class="event-card-title"&gt;
-        Hiking Trip
-      &lt;/div&gt;
-
-    &lt;/div&gt;</code></pre>
-          </div>
-
-          <div>
-            <p class="code-label">After</p>
-            <pre><code>&lt;section class="events-grid"&gt;
-
-      &lt;h2 class="event-card-title"&gt;
-        Hiking Trip
-      &lt;/h2&gt;
-
-    &lt;/section&gt;</code></pre>
-          </div>
-        </div>
-
-        <p class="explanation">
-          Improved the document structure and made the content
-          easier for assistive technologies to interpret.
-        </p>
-      </article>
 
     </section>
 
