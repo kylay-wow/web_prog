@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website accessibility audit and improvement report.">
+  <title>Performance Audit Report</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #F7F8F6;
+      color: #202820;
+      line-height: 1.7;
+    }
+
+    /* Skip link: visible only when keyboard-focused */
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translate(-50%, -160%);
+      z-index: 1000;
+      padding: 8px 16px;
+      background: #173D2A;
+      color: #FFFFFF;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus {
+      transform: translate(-50%, 0);
+      outline: 3px solid #174FBC;
+      outline-offset: 3px;
+    }
+
+    /* Top navigation */
+    .topbar {
+      background: #FFFFFF;
+      border-bottom: 1px solid #D5DDD6;
+      padding: 15px 24px;
+    }
+
+    .nav-inner {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand {
+      color: #173D2A;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: #39473D;
+      font-size: 13px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover {
+      color: #174FBC;
+      text-decoration: underline;
+    }
+
+    /* Visible focus for keyboard users */
+    a:focus-visible {
+      outline: 3px solid #174FBC;
+      outline-offset: 4px;
+      border-radius: 3px;
+    }
+
+    main:focus {
+      outline: none;
+    }
+
+    .report {
+      max-width: 900px;
+      margin: auto;
+      padding: 48px 24px;
+    }
+
+    .header {
+      margin-bottom: 42px;
+    }
+
+    .eyebrow {
+      color: #315D42;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 44px);
+      margin: 8px 0;
+      letter-spacing: -1.5px;
+      line-height: 1.2;
+    }
+
+    .description {
+      color: #46534A;
+      font-size: 15px;
+    }
+
+    section {
+      margin-bottom: 48px;
+      scroll-margin-top: 30px;
+    }
+
+    .section-heading {
+      font-size: 20px;
+      margin-bottom: 17px;
+      letter-spacing: -0.4px;
+    }
+
+    .section-intro {
+      color: #46534A;
+      font-size: 13px;
+      margin-top: -10px;
+      margin-bottom: 16px;
+    }
+
+    /* Lighthouse scores */
+    .score-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .score-card {
+      background: #FFFFFF;
+      border: 1px solid #C7D0C9;
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .score-card p {
+      color: #46534A;
+      font-size: 13px;
+    }
+
+    .score {
+      font-size: 2.2rem !important;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 10px 0;
+    }
+
+    .before {
+      color: #854500;
+    }
+
+    .after {
+      color: #205B37;
+    }
+
+    /* Issues */
+    .issue-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .issue {
+      background: #FFFFFF;
+      border: 1px solid #C7D0C9;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+
+    .issue h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .issue p {
+      font-size: 13px;
+      color: #46534A;
+    }
+
+    .status {
+      display: inline-block;
+      color: #174B2D;
+      background: #E5F1E8;
+      border: 1px solid #A9C9B1;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    /* Code comparisons */
+    .change-card {
+      background: #FFFFFF;
+      border: 1px solid #C7D0C9;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 15px;
+    }
+
+    .change-card h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .change-card > p {
+      font-size: 13px;
+      color: #46534A;
+      margin-bottom: 16px;
+    }
+
+    .code-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .code-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #39473D;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    pre {
+      background: #EDF0ED;
+      border: 1px solid #C7D0C9;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #202820;
+    }
+
+    .explanation {
+      margin-top: 13px;
+      font-size: 13px;
+      color: #315D42;
+    }
+
+    footer {
+      border-top: 1px solid #C7D0C9;
+      padding-top: 20px;
+      font-size: 12px;
+      color: #46534A;
+    }
+
+    @media (max-width: 600px) {
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        gap: 12px;
+      }
+
+      .score-grid,
+      .code-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report {
+        padding: 32px 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .skip-link {
+        transition: none;
+      }
+    }
+
+    .score-image {
+      width: 100%;
+      min-height: 180px;
+      margin-top: 20px;
+      padding: 12px;
+      background: #f4f7fe;
+      border: 2px dashed #3a63d0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-image img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .image-caption {
+      margin-top: 10px;
+      color: #0e2466;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Skip navigation -->
+  <a class="skip-link" href="#main-content">
+    Skip to main content
+  </a>
+
+  <!-- Navigation -->
+  <nav class="topbar" aria-label="Report navigation">
+    <div class="nav-inner">
+      <a href="#top" class="brand">ACCESSIBILITY / REPORT</a>
+
+      <ul class="nav-links">
+        <li><a href="#scores">Scores</a></li>
+        <li><a href="#issues">Issues</a></li>
+        <li><a href="#improvements">Improvements</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="header report" id="top">
+    <p class="eyebrow">Website Audit / 2026</p>
+    <h1>Accessibility Report</h1>
+    <p class="description">
+      Evaluating accessibility issues and documenting improvements
+      made to enhance the website experience.
+    </p>
+  </header>
+
+  <main id="main-content" class="report" tabindex="-1">
+
+    <!-- 01: Scores -->
+    <section id="scores" aria-labelledby="scores-heading">
+      <h2 class="section-heading" id="scores-heading">
+        01 — Lighthouse Results
+      </h2>
+
+      <p class="section-intro">
+        Comparison of performance scores before and after improvements.
+      </p>
+
+      <div class="score-grid">
+
+        <div class="score-card before">
+          <h3>Initial Performance Score</h3>
+          <p class="score">99</p>
+
+          <div class="score-image">
+            <img
+              src="99 image.jpeg"
+              alt="Lighthouse accessibility score before improvements"
+            >
+          </div>
+          <p class="image-caption">Before performance improvements</p>
+        </div>
+
+        <div class="score-card after">
+          <h3>Final Performance Score</h3>
+          <p class="score">100</p>
+
+          <div class="score-image">
+            <img
+              src="Screenshot 2026-11-05 161538.png"
+              alt="Lighthouse accessibility score after improvements"
+            >
+          </div>
+          <p class="image-caption">After performance improvements</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 02: Issues -->
+    <section id="issues" aria-labelledby="issues-heading">
+      <h2 class="section-heading" id="issues-heading">
+        02 — Opportunities
+      </h2>
+
+      <div class="issue-list">
+
+        <article class="issue">
+          <h3>Minify CSS</h3>
+          <p>
+            The CSS files contained unnecessary whitespace, 
+            line breaks and formatting that increased their file size.
+          </p>
+          <span class="status">Addressed</span>
+        </article>
+
+        <div class="issue-list">
+
+
+      </div>
+    </section>
+
+
+    <!-- 03: Improvements -->
+    <section id="improvements" aria-labelledby="improvements-heading">
+      <h2 class="section-heading" id="improvements-heading">
+        03 — Improvements Implemented
+      </h2>
+
+      <!-- 01: CSS -->
+      <article class="change-card">
+        <h3>01. Minified CSS</h3>
+        <p>
+          Removed whitespaces, line breaks and formatting in CSS
+          that increased the file size.
+        </p>
+
+        <div class="code-grid">
+          <div>
+            <p class="code-label">Before</p>
+            <pre><code>.events-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+.event-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-card);
+  transition: transform .15s, box-shadow .15s;
+}
+          </code></pre>
+          </div>
+
+          <div>
+            <p class="code-label">After</p>
+            <pre><code>.events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;}
+.event-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-card); transition: transform .15s, box-shadow .15s;}
+
+       </code></pre>
+          </div>
+        </div>
+
+        <p class="explanation">
+          Removed whitespace in the CSS to reduce file size as there are lesser data being transferred
+          and can slightly imrpove page loading performance.
+        </p>
+      </article>
+
+
+    </section>
+
+    <!-- 04: Why good -->
+    <section id="issues" aria-labelledby="issues-heading">
+      <h2 class="section-heading" id="issues-heading">
+        04 — Why was the webpage already peforming well?
+      </h2>
+
+      <div class="issue-list">
+
+        <article class="issue">
+          <h3>Webpage was already lightweight</h3>
+          <p>
+            The webpage did not load any heavy libraries or frameworks,
+            and it only contained HTML for event cards, CSS for layout, colouring and responsive design,
+            and a small amount of Javascript for filtering, searching and implementing RSVP interactions. 
+            Thus the webpage did not have much things slowing down performance
+          </p>
+        </article>
+
+        <article class="issue">
+          <h3>Images were not used</h3>
+          <p>
+            CSS gradient were used as background for cards instead of actual images, keeping cost to render low
+            as network requests were not needed, less downloading and decoding, as well as because CSS gradients
+            are generated by the browser.
+          </p>
+        </article>
+
+        <article class="issue">
+          <h3>Javascript is small</h3>
+          <p>
+            The webpage only used Javascript for simple filtering, searching and toggling of RSVP or not.
+            There was no heavy calculations or large datasets needed to be processed.
+          </p>
+        </article>
+
+        <div class="issue-list">
+
+
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
