@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card Component</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #15171c;
+            color: #f1f1f1;
+            min-height: 100vh;
+        }
+
+        .course-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 180px);
+            justify-content: center;
+            gap: 20px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+       .course-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .required {
+            background: #4a2028;
+            color: #ff7777;
+            border: 1px solid #a94350;
+        }
+
+        .optional {
+            background: #343944;
+            color: #b8bec9;
+            border: 1px solid #505866;
+        }
+
+        /* Individual card */
+        .card {
+            background: #20232b;
+            border: 1px solid #343944;
+            border-radius: 12px;
+            width: 180px;
+            height: 200px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #91a8ff;
+        }
+        /* Profile image */
+        .card img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #91a8ff;
+            margin-bottom: 8px;
+        }
+
+        .card-name {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .card-info p {
+            font-size: 12px;
+            margin: 6px 0;
+        }
+
+
+        /* Responsive layout */
+        @media (max-width: 800px) {
+            .profile-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .profile-list {
+                grid-template-columns: 1fr;
+                margin: 25px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        function CourseCard({title, instructor, credits, required}){
+            return (
+                <article className='card'>
+                    <h3 className='card-name'>{title}</h3>
+                    <div className='card-info'>
+                        <p>Instructor: {instructor}</p>
+                        <p>Credits: {credits}</p>
+                        <span className={`course-badge ${required ? "required" : "optional"}`}>
+                            {required ? "필수 - required" : "선택 - not required"}
+                        </span>
+                    </div>
+                </article>
+            )
+        }
+        const courses = [
+            { id: 1, title: 'Web Programming', instructor: 'Dr. Toshpulatov', credits: 3, required: true },
+            { id: 2, title: 'Database Systems', instructor: 'Dr. Kim', credits: 3, required: true },
+            { id: 3, title: 'Mobile App Dev', instructor: 'Dr. Lee', credits: 2, required: false },
+        ];
+
+        function CourseCatalog() {
+        return (
+                <div className="course-list">
+                    {courses.map((course) => {
+                        return (
+                            <CourseCard
+                                key={course.id}
+                                title={course.title}
+                                instructor={course.instructor}
+                                credits={course.credits}
+                                required={course.required}
+                            />
+                        );
+                    })}
+                </div>
+            );
+        }
+        
+        ReactDOM.createRoot(document.getElementById("root")).render(<CourseCatalog/>)
+    </script>
+</body>
+</html>

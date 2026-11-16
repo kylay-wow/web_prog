@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card Component</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #15171c;
+            color: #f1f1f1;
+            min-height: 100vh;
+        }
+
+        /* Profile layout */
+        .profile-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 180px);
+            justify-content: center;
+            gap: 15px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Individual card */
+        .card {
+            background: #20232b;
+            border: 1px solid #343944;
+            border-radius: 12px;
+            width: 180px;
+            height: 200px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #91a8ff;
+        }
+        /* Profile image */
+        .card img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #91a8ff;
+            margin-bottom: 8px;
+        }
+
+        .card-name {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .card-info p {
+            font-size: 12px;
+            margin: 6px 0;
+        }
+
+        /* Email link */
+        .card-info a {
+            color: #91a8ff;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .card-info a:hover {
+            color: #c2ceff;
+            text-decoration: underline;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 800px) {
+            .profile-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .profile-list {
+                grid-template-columns: 1fr;
+                margin: 25px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        function ProfileCard({name, role, email, avatarUrl='https://via.placeholder.com/80'}){
+            return (
+                <article className='card'>
+                    <h3 className='card-name'>{name}</h3>
+                    <div className='card-info'>
+                        <p>{role}</p>
+                        <p>{email}</p>
+                        <img src ={avatarUrl} alt = {name} width="80" height="80" />
+                    </div>
+                </article>
+            )
+        }
+        const profiles = [
+            {
+                name: "Kylie Gan",
+                role: "Student",
+                email: "kyli@gmail.com",
+                avatarUrl: "./profile_img.jpeg"
+            },
+            {
+                name: "Micheal Tan",
+                role: "Professor",
+                email: "M.T@gmail.com",
+            },
+            {
+                name: "Gladys Choo",
+                role: "Student",
+                email: "gladys@gmail.com",
+            }
+        ];
+
+            function ProfileList() {
+                return (
+                    <div className="profile-list">
+                        {profiles.map((profile) => {
+                            return (
+                                <ProfileCard
+                                    key={profile.name}
+                                    name={profile.name}
+                                    role={profile.role}
+                                    email={profile.email}
+                                    avatarUrl={profile.avatarUrl}
+                                />
+                            );
+                        })}
+                    </div>
+                );
+            }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<ProfileList/>)
+    </script>
+</body>
+</html>

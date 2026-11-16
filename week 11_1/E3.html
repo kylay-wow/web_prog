@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card Component</title>
+    <style>
+     
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 50px 20px;
+        font-family: 'Segoe UI', sans-serif;
+        background: #17191C;
+        color: #E8E9E7;
+    }
+
+    .app {
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        color: #A0A4A8;
+        margin-bottom: 35px;
+    }
+
+    .input-section {
+        background: #202328;
+        border: 1px solid #34383D;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 25px;
+    }
+
+    .input-section label {
+        display: block;
+        font-size: 13px;
+        color: #A0A4A8;
+        margin-bottom: 8px;
+    }
+
+    .input-section input {
+        width: 100%;
+        padding: 12px 14px;
+        margin-bottom: 20px;
+        background: #17191C;
+        border: 1px solid #34383D;
+        border-radius: 7px;
+        color: #E8E9E7;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .input-section input:focus {
+        border-color: #8999A6;
+    }
+
+    .preview-label {
+        color: #8999A6;
+        font-size: 12px;
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+    }
+
+    .card {
+        background: #202328;
+        border: 1px solid #34383D;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+    }
+
+    .card h2 {
+        margin-top: 0;
+        font-size: 22px;
+        color: #E8E9E7;
+    }
+
+    .card-content {
+        color: #A0A4A8;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        
+    function Card({ title, children }) {
+        return (
+            <div className="card">
+                <h2>{title}</h2>
+                <div className="card-content">
+                    {children}
+                </div>
+            </div>
+        );
+    }
+
+    function App() {
+        const [title, setTitle] = React.useState("My Card");
+        const [content, setContent] = React.useState("Hello!");
+
+        return (
+            <div className="app">
+                <h1>Card Editor</h1>
+                <p className="subtitle">Customise your card in real time.</p>
+
+                <div className="input-section">
+                    <label>Card Title</label>
+                    <input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+
+                    <label>Card Content</label>
+                    <input
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                </div>
+
+                <p className="preview-label">LIVE PREVIEW</p>
+
+                <Card title={title}>
+                    <p className="card-content">{content}</p>
+                </Card>
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App/>)
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!-- // Challenge: Build a ProductCard component
+// that accepts these props:
+// name (string) — product name
+// price (number) — price in KRW
+// rating (number) — 0 to 5 stars
+// inStock (boolean) — is it available?
+// Expected usage:
+// <ProductCard
+// name="Wireless Earbuds"
+// price={89000}
+// rating={4.5}
+// inStock={true}
+// />
+// Bonus: display rating/5 (e.g., "4.5 / 5 stars")
+// Bonus 2: show "Out of Stock" label if !inStock -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Card Component</title>
+    <style>
+        .product-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-name {
+            font-size: 20px;
+            margin-bottom: 12px;    
+        }
+
+        .card-info p {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="product-list"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        function ProductCard({name, price, rating, inStock}){
+            return (
+                <div className='card'>
+                    <h3 className='card-name'>{name}</h3>
+                    <div className='card-info'>
+                        <p>₩{price}</p>
+                        <p>{rating}/5 stars</p>
+                        {inStock?"In Stock": "Out of Stock"}
+                    </div>
+                </div>
+            )
+        }
+        const products = [
+            {
+                name: "Wireless Earbuds",
+                price: 89000,
+                rating: 4.5,
+                inStock: true
+            },
+            {
+                name: "Mechanical Keyboard",
+                price: 120000,
+                rating: 4.8,
+                inStock: false
+            },
+            {
+                name: "Gaming Mouse",
+                price: 45000,
+                rating: 4.2,
+                inStock: true
+            }
+        ];
+
+            function ProdList() {
+                return (
+                    <div>
+                        {products.map((product) => {
+                            return (
+                                <ProductCard
+                                    key={product.name}
+                                    name={product.name}
+                                    price={product.price}
+                                    rating={product.rating}
+                                    inStock={product.inStock}
+                                />
+                            );
+                        })}
+                    </div>
+                );
+            }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<ProdList/>)
+    </script>
+</body>
+</html>
