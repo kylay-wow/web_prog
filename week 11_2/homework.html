@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 11_2 Homework</title>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #17191c;
+            color: #e8e9e7;
+            min-height: 100vh;
+            padding: 60px 8%;
+        }
+
+        header {
+            margin-bottom: 45px;
+        }
+
+        .eyebrow {
+            color: #8999a6;
+            font-size: 12px;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: #a0a4a8;
+            line-height: 1.6;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 25px;
+        }
+
+        .activity-card {
+            background: #202328;
+            border: 1px solid #34383d;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-6px);
+            border-color: #8999a6;
+        }
+
+        .activity-image {
+            width: 100%;
+            height: 260px;
+            background: #292d32;
+        }
+
+        .activity-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .activity-info {
+            padding: 24px;
+        }
+
+        .tag {
+            color: #8999a6;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 21px;
+            margin: 12px 0;
+        }
+
+        .activity-info p {
+            color: #a0a4a8;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: 60px;
+            color: #777e85;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 35px 6%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="gallery">
+
+        <section class="activity-card">
+            <div class="activity-image">
+                <img src="studentDirectory_img.png" alt="Student Directory activity">
+            </div>
+            <div class="activity-info">
+                <h2>Student Card homework</h2>
+            </div>
+        </section>
+
+        <section class="activity-card">
+            <div class="activity-image">
+                <img src="video_lecture_code.png" alt="Video Lecture Activity Code">
+            </div>
+            <div class="activity-info">
+                <h2>Video Lecture Activity</h2>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
