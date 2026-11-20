@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Week 11.2 React Activities</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 30px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .activity {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 700px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 7px 12px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        input, textarea {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        nav {
+            text-align: center;
+            margin: 20px;
+        }
+
+        nav a {
+            margin: 5px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Week 11.2 - React Activities E7</h1>
+    <p style="text-align:center;">React Props, State and Events</p>
+
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { useState, useEffect } = React;
+
+        function App() {
+
+            // E7: Student Lab Profile
+            const [profile, setProfile] = useState({
+                name: '',
+                email: ''
+            });
+
+            const [message, setMessage] = useState('');
+
+            function handleChange(e) {
+                const { name, value } = e.target;
+
+                setProfile({
+                    ...profile,
+                    [name]: value
+                });
+            }
+
+            function handleSubmit(e) {
+                e.preventDefault();
+
+                if (!profile.name.trim() || !profile.email.trim()) {
+                    setMessage('Please fill in all fields.');
+                } else if (!profile.email.includes('@')) {
+                    setMessage('Please enter a valid email.');
+                } else {
+                    setMessage('Profile submitted successfully!');
+                }
+            }
+
+
+            return (
+                <div>
+
+                    <section className="activity" id="e7">
+                        <h2>E7: Student Lab Profile</h2>
+
+                        <form onSubmit={handleSubmit}>
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={profile.name}
+                                onChange={handleChange}
+                            />
+
+                            <br />
+
+                            <label>Email:</label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={profile.email}
+                                onChange={handleChange}
+                            />
+
+                            <br />
+
+                            <button type="submit">Submit Profile</button>
+                        </form>
+
+                        <p>{message}</p>
+                    </section>
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+
+</body>
+</html>

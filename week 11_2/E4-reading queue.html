@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Week 11.2 React Activities</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 30px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .activity {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 700px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 7px 12px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        input, textarea {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        nav {
+            text-align: center;
+            margin: 20px;
+        }
+
+        nav a {
+            margin: 5px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Week 11.2 - React Activities E4</h1>
+    <p style="text-align:center;">React Props, State and Events</p>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { useState, useEffect } = React;
+
+        function App() {
+
+            // E4: Reading Queue
+            const [books, setBooks] = useState([]);
+            const [newBook, setNewBook] = useState('');
+
+            function addBook(e) {
+                e.preventDefault();
+
+                if (newBook.trim() === '') return;
+
+                setBooks([...books, {
+                    id: Date.now(),
+                    title: newBook.trim()
+                }]);
+
+                setNewBook('');
+            }
+
+            function removeBook(id) {
+                setBooks(books.filter(book => book.id !== id));
+            }
+
+            return (
+                <div>
+
+                    {/* E4 */}
+                    <section className="activity" id="e4">
+                        <h2>E4: Reading Queue</h2>
+
+                        <form onSubmit={addBook}>
+                            <input
+                                value={newBook}
+                                onChange={(e) => setNewBook(e.target.value)}
+                                placeholder="Enter a book title"
+                            />
+
+                            <button type="submit">Add</button>
+                        </form>
+
+                        <ul>
+                            {books.map(book => (
+                                <li key={book.id}>
+                                    {book.title}
+                                    <button onClick={() => removeBook(book.id)}>
+                                        Remove
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {books.length === 0 && <p>No readings added yet.</p>}
+                    </section>
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+
+</body>
+</html>

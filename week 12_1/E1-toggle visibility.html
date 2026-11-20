@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle visibility</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #root {
+            background-color: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            width: 300px;
+        }
+
+        button {
+            background-color: #394b63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #263548;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.5;
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+
+        const { useState } = React;
+
+        function ToggleDetail() {
+            const [isVisible, setIsVisible] = useState(false);
+
+            return (
+                <div>
+                <button onClick={() => setIsVisible(prev => !prev)}>
+                    {isVisible ? 'Hide Name' : 'Show Name'}
+                </button>
+                {isVisible && (
+                    <p>Kylie Gan 202699467</p>
+                )}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<ToggleDetail/>)
+
+
+    </script>
+</body>
+</html>

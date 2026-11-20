@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Week 11.2 React Activities</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 30px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .activity {
+            background: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 700px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 7px 12px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        input, textarea {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        nav {
+            text-align: center;
+            margin: 20px;
+        }
+
+        nav a {
+            margin: 5px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Week 11.2 - React Activities</h1>
+    <p style="text-align:center;">React Props, State and Events</p>
+
+    <nav>
+        <a href="#e2">E2</a>
+        <a href="#e3">E3</a>
+        <a href="#e4">E4</a>
+        <a href="#e5">E5</a>
+        <a href="#e6">E6</a>
+        <a href="#e7">E7</a>
+        <a href="#e8">E8</a>
+    </nav>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const { useState, useEffect } = React;
+
+        function App() {
+
+            // E2: Study Session Counter
+            const [sessions, setSessions] = useState(0);
+
+            // E3: Personal Greeting
+            const [username, setUsername] = useState('');
+
+            // E4: Reading Queue
+            const [books, setBooks] = useState([]);
+            const [newBook, setNewBook] = useState('');
+
+            function addBook(e) {
+                e.preventDefault();
+
+                if (newBook.trim() === '') return;
+
+                setBooks([...books, {
+                    id: Date.now(),
+                    title: newBook.trim()
+                }]);
+
+                setNewBook('');
+            }
+
+            function removeBook(id) {
+                setBooks(books.filter(book => book.id !== id));
+            }
+
+            // E5: Study Hint
+            const [showHint, setShowHint] = useState(false);
+
+            // E6: Assignment Tracker
+            const [tasks, setTasks] = useState([
+                { id: 1, title: 'Complete React notes', completed: false },
+                { id: 2, title: 'Practise useState', completed: true },
+                { id: 3, title: 'Finish coding exercise', completed: false }
+            ]);
+
+            const [filter, setFilter] = useState('all');
+
+            function toggleTask(id) {
+                setTasks(tasks.map(task =>
+                    task.id === id
+                        ? { ...task, completed: !task.completed }
+                        : task
+                ));
+            }
+
+            function clearCompleted() {
+                setTasks(tasks.filter(task => !task.completed));
+            }
+
+            const filteredTasks = tasks.filter(task => {
+                if (filter === 'pending') return !task.completed;
+                if (filter === 'completed') return task.completed;
+                return true;
+            });
+
+            // E7: Student Lab Profile
+            const [profile, setProfile] = useState({
+                name: '',
+                email: ''
+            });
+
+            const [message, setMessage] = useState('');
+
+            function handleChange(e) {
+                const { name, value } = e.target;
+
+                setProfile({
+                    ...profile,
+                    [name]: value
+                });
+            }
+
+            function handleSubmit(e) {
+                e.preventDefault();
+
+                if (!profile.name.trim() || !profile.email.trim()) {
+                    setMessage('Please fill in all fields.');
+                } else if (!profile.email.includes('@')) {
+                    setMessage('Please enter a valid email.');
+                } else {
+                    setMessage('Profile submitted successfully!');
+                }
+            }
+
+            // E8: Personal Note Saver
+            const [note, setNote] = useState(() => {
+                return localStorage.getItem('myNote') || '';
+            });
+
+            useEffect(() => {
+                localStorage.setItem('myNote', note);
+            }, [note]);
+
+            return (
+                <div>
+
+                    {/* E2 */}
+                    <section className="activity" id="e2">
+                        <h2>E2: Study Session Counter</h2>
+
+                        <p>Completed sessions: {sessions}</p>
+
+                        <button onClick={() => setSessions(sessions - 1)}>
+                            -1 Session
+                        </button>
+
+                        <button onClick={() => setSessions(sessions + 1)}>
+                            +1 Session
+                        </button>
+
+                        <button onClick={() => setSessions(0)}>
+                            Reset
+                        </button>
+                    </section>
+
+                    {/* E3 */}
+                    <section className="activity" id="e3">
+                        <h2>E3: Personal Greeting</h2>
+
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter your name"
+                        />
+
+                        <p>Hello, {username.trim() || 'Guest'}!</p>
+                    </section>
+
+                    {/* E4 */}
+                    <section className="activity" id="e4">
+                        <h2>E4: Reading Queue</h2>
+
+                        <form onSubmit={addBook}>
+                            <input
+                                value={newBook}
+                                onChange={(e) => setNewBook(e.target.value)}
+                                placeholder="Enter a book title"
+                            />
+
+                            <button type="submit">Add</button>
+                        </form>
+
+                        <ul>
+                            {books.map(book => (
+                                <li key={book.id}>
+                                    {book.title}
+                                    <button onClick={() => removeBook(book.id)}>
+                                        Remove
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {books.length === 0 && <p>No readings added yet.</p>}
+                    </section>
+
+                    {/* E5 */}
+                    <section className="activity" id="e5">
+                        <h2>E5: Study Hint</h2>
+
+                        <button onClick={() => setShowHint(!showHint)}>
+                            {showHint ? 'Hide Hint' : 'Show Hint'}
+                        </button>
+
+                        {showHint && (
+                            <p>
+                                Hello! I toggled this with React.
+                            </p>
+                        )}
+                    </section>
+
+                    {/* E6 */}
+                    <section className="activity" id="e6">
+                        <h2>E6: Assignment Tracker</h2>
+
+                        <button onClick={() => setFilter('all')}>All</button>
+                        <button onClick={() => setFilter('pending')}>Pending</button>
+                        <button onClick={() => setFilter('completed')}>Completed</button>
+
+                        <ul>
+                            {filteredTasks.map(task => (
+                                <li key={task.id}>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={task.completed}
+                                            onChange={() => toggleTask(task.id)}
+                                        />
+                                        {task.title}
+                                    </label>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {filteredTasks.length === 0 && (
+                            <p>No assignments found.</p>
+                        )}
+
+                        <button onClick={clearCompleted}>
+                            Clear Completed Tasks
+                        </button>
+                    </section>
+
+                    {/* E7 */}
+                    <section className="activity" id="e7">
+                        <h2>E7: Student Lab Profile</h2>
+
+                        <form onSubmit={handleSubmit}>
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={profile.name}
+                                onChange={handleChange}
+                            />
+
+                            <br />
+
+                            <label>Email:</label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={profile.email}
+                                onChange={handleChange}
+                            />
+
+                            <br />
+
+                            <button type="submit">Submit Profile</button>
+                        </form>
+
+                        <p>{message}</p>
+                    </section>
+
+                    {/* E8 */}
+                    <section className="activity" id="e8">
+                        <h2>E8: Personal Note Saver</h2>
+
+                        <textarea
+                            rows="5"
+                            cols="40"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            placeholder="Write a note here..."
+                        />
+
+                        <br />
+
+                        <button onClick={() => setNote('')}>
+                            Clear Note
+                        </button>
+
+                        <p>
+                            {note ? 'Your note is saved!' : 'No note available.'}
+                        </p>
+                    </section>
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+
+</body>
+</html>
