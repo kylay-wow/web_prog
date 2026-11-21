@@ -4,6 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E2 add n remove item from list</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #root {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            width: 320px;
+        }
+
+        h2 {
+            color: #263548;
+            margin-top: 0;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 65%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            background-color: #394b63;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #263548;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-top: 20px;
+        }
+
+        li {
+            padding: 8px 0;
+            color: #444;
+        }
+
+        li button {
+            background-color: #d9534f;
+            padding: 5px 9px;
+            margin-left: 10px;
+        }
+
+        li button:hover {
+            background-color: #b52b27;
+        }
+    </style>
+
 </head>
 <body>
     <div id="root"></div>
@@ -15,17 +82,51 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
+        const {useState} = React;
+        
         function Itemlist(){
             const [item, setItem] = useState('')
             const [list, setList] = useState([])
 
+            function handleAdd(){
+                
+                if (item.trim() !== ''){
+                        setList(list => [...list, item]);
+                        setItem('')
+                    }
+
+            }
+
+            function handleDelete(index){
+                setList(list.filter((item,currentindex) => currentindex !== index));
+            }
+
             return (
-                <input
-                    value={item}
-                    onChange={(e) => setItem(e.target.value)}
-                />
+                <div>
+                    <input
+                        value={item}
+                        onChange={(e) => setItem(e.target.value)}
+                    />
+
+                    <button onClick={handleAdd}>
+                        Add
+                    </button>
+                
+
+                    {list.map((item, index) => (
+                        <li key={index}>
+                            {item} 
+                            <button onClick={() => handleDelete(index)}>
+                                X
+                            </button>
+                        </li>
+                    ))}
+
+                </div>
             )
         }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<Itemlist />);
     </script>
 
 </body>

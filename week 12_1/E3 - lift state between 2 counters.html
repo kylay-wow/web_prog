@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E3 scoreboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #151b24;
+            font-family: Georgia, serif;
+            color: #f5e6c8;
+        }
+
+        .scoreboard {
+            width: 90%;
+            max-width: 650px;
+            padding: 35px;
+            text-align: center;
+            background: #222d3b;
+            border: 2px solid #c6a45c;
+            border-radius: 16px;
+            box-shadow: 0 0 25px #000;
+        }
+
+
+        .player {
+            flex: 1;
+            padding: 22px 12px;
+            border-radius: 12px;
+            background: #303d4d;
+            border: 1px solid #8e7544;
+        }
+
+        .player h3 {
+            font-size: 19px;
+        }
+
+
+        button {
+            padding: 9px 16px;
+            margin: 4px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            background: #d4af63;
+            color: #20252c;
+        }
+
+        button:hover {
+            background: #f1d58e;
+        }
+
+        @media (max-width: 500px) {
+            .players {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const {useState} = React;
+
+        function PlayerScore({score, onIncrement, onDecrement}){
+                return(
+                    <div>
+                        <h3>Player Score: {score}</h3>
+                        <button onClick={onIncrement}>+1</button>
+                        <button onClick={onDecrement}>-1</button>
+                    </div>
+                );
+            }
+        
+        function ScoreBoard(){
+            const [player1, setPlayer1] = useState(0);
+            const [player2, setPlayer2] = useState(0);
+
+            const totalScore = player1+player2;
+
+            const incrementP1 = () => {
+                setPlayer1(p => p+1);
+            }
+
+            const decrementP1 = () => {
+                setPlayer1(p => p-1);
+            }
+
+            const incrementP2 = () => {
+                setPlayer2(p => p+1);
+            }
+
+            const decrementP2 = () => {
+                setPlayer2(p => p-1);
+            }
+
+
+            return (
+                <div className="scoreboard">
+                    <h2>Total Score: {totalScore}</h2>
+                    <PlayerScore score={player1} onIncrement={incrementP1} onDecrement={decrementP1} className="player"/>
+                    <PlayerScore score={player2} onIncrement={incrementP2} onDecrement={decrementP2} className="player"/> 
+
+                </div>
+            )
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<ScoreBoard />);
+    </script>
+
+</body>
+</html>

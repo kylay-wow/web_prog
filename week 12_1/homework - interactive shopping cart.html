@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Shopping Cart</title>
+    <style>
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 35px;
+            font-family: Arial, sans-serif;
+            background: #f4f6fa;
+            color: #202938;
+        }
+
+        /* Main container */
+        .shop-container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .shop-title {
+            background: #172554;
+            color: white;
+            padding: 28px 35px;
+            margin: 0 0 30px;
+            border-radius: 14px;
+            font-size: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main layout */
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        /* Product section */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #e5eaf2;
+            box-shadow: 0 4px 12px rgba(20, 40, 80, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(20, 40, 80, 0.1);
+        }
+
+        .product-card h2 {
+            font-size: 17px;
+            min-height: 40px;
+            margin: 12px 0;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 165px;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            color: #1d4ed8;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .product-stock {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* Buttons */
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 9px 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .product-card button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 11px;
+            background: #2563eb;
+            color: white;
+        }
+
+        .product-card button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        /* Shopping cart sidebar */
+        .cart-panel {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            border: 1px solid #e5eaf2;
+            box-shadow: 0 4px 12px rgba(20, 40, 80, 0.05);
+            position: sticky;
+            top: 20px;
+        }
+
+        .cart-title {
+            margin: 0 0 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5eaf2;
+            font-size: 21px;
+        }
+
+        .cart-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .cart-item button {
+            margin: 3px 3px 0 0;
+            background: #e8efff;
+            color: #1d4ed8;
+        }
+
+        .cart-item button:hover {
+            background: #d5e2ff;
+        }
+
+        .cart-item .remove-button {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .cart-item .remove-button:hover {
+            background: #fecaca;
+        }
+
+        .empty-cart {
+            color: #94a3b8;
+            font-size: 14px;
+            text-align: center;
+            padding: 25px 0;
+        }
+
+        .cart-total {
+            border-top: 2px solid #e5eaf2;
+            padding-top: 18px;
+            margin-top: 18px;
+            text-align: right;
+            color: #1d4ed8;
+            font-size: 20px;
+        }
+
+        /* Responsive layout */
+        @media (max-width: 1050px) {
+            .shop-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 15px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .shop-title {
+                font-size: 24px;
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const {useState} = React;
+
+        const products = [
+            {
+                id: 1,
+                name: "Wireless Headphones",
+                price: 49900,
+                image: "./headphones.png",
+                stock: 5,
+
+            },
+
+            {
+                id: 2,
+                name: "Gaming Mouse",
+                price: 6000,
+                image: "./mouse.png",
+                stock: 20,
+
+            },
+
+            {
+                id: 3,
+                name: "Power Bank",
+                price: 23100,
+                image: "./power_bank.png",
+                stock: 13,
+
+            },
+
+            {
+                id: 4,
+                name: "Iphone 18",
+                price: 1452900,
+                image: "./iphone18.png",
+                stock: 300,
+
+            },
+
+            {
+                id: 5,
+                name: "Owala",
+                price: 48300,
+                image: "./owala.png",
+                stock: 1,
+
+            },
+
+            {
+                id: 6,
+                name: "Umbrella",
+                price: 10000,
+                image: "./umbrella.png",
+                stock: 36,
+
+            },
+
+        ];
+        
+            
+        function ShoppingCart(){
+            const [cart, setCart] = useState([]);
+            const [stockList, setStockList] = useState(products);
+
+            function addToCart(product) {
+                setCart(prevCart => {
+                    const existingItem = prevCart.find(item => item.id === product.id);
+
+                    if (existingItem) {
+                    if (existingItem.quantity >= product.stock) {
+                        alert("Not enough stock!");
+                        return prevCart;
+                    }
+
+                    setStockList(prev =>
+                        prev.map(item =>
+                            item.id === product.id
+                            ? { ...item, stock: item.stock - 1 }
+                            : item
+                        )
+                    );
+
+                    return prevCart.map(item =>
+                        item.id === product.id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
+                    );
+                    }
+
+                    setStockList(prev =>
+                        prev.map(item =>
+                            item.id === product.id
+                            ? { ...item, stock: item.stock - 1 }
+                            : item
+                        )
+                    );
+
+                    return [...prevCart, { ...product, quantity: 1 }];
+                });
+            }
+
+            function increaseQuantity(id) {
+                const product = stockList.find(item => item.id === id);
+
+                if (!product || product.stock <= 0) return;
+
+                setCart(prevCart =>
+                    prevCart.map(item =>
+                    item.id === id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
+                    )
+                );
+
+                setStockList(prev =>
+                    prev.map(item =>
+                    item.id === id
+                        ? { ...item, stock: item.stock - 1 }
+                        : item
+                    )
+                );
+            }
+
+            function decreaseQuantity(id) {
+                setCart(prevCart =>
+                    prevCart.map(item =>
+                    item.id === id
+                        ? { ...item, quantity: item.quantity - 1 }
+                        : item
+                    ).filter(item => item.quantity > 0)
+                );
+
+                setStockList(prev =>
+                    prev.map(item =>
+                    item.id === id
+                        ? { ...item, stock: item.stock + 1 }
+                        : item
+                    )
+                );
+            }
+
+            function removeItem(id) {
+                const cartItem = cart.find(item => item.id === id);
+
+                if (!cartItem) return;
+
+                setStockList(prev =>
+                    prev.map(item =>
+                    item.id === id
+                        ? { ...item, stock: item.stock + cartItem.quantity }
+                        : item
+                    )
+                );
+
+                setCart(prev => prev.filter(item => item.id !== id));
+            }
+
+            const totalPrice = cart.reduce(
+                (total, item) => total + item.price * item.quantity,
+                0
+            );
+
+            
+            return (
+                <div className="shop-container">
+                    <h1 className="shop-title">Mini Tech Shop</h1>
+
+                    <div className="shop-layout">
+
+                        {/* Product section */}
+                        <div className="product-grid">
+                            {stockList.map(product => (
+                                <div key={product.id} className="product-card">
+                                    <img
+                                        src={product.image}
+                                        alt={product.name}
+                                        className="product-image"
+                                    />
+
+                                    <h2>{product.name}</h2>
+
+                                    <p className="product-price">
+                                        ₩{product.price.toLocaleString()}
+                                    </p>
+
+                                    <p className="product-stock">
+                                        Stock available: {product.stock}
+                                    </p>
+
+                                    <button
+                                        onClick={() => addToCart(product)}
+                                        disabled={product.stock <= 0}
+                                    >
+                                        {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Shopping cart section */}
+                        <div className="cart-panel">
+                            <h2 className="cart-title">Your Shopping Cart</h2>
+
+                            {cart.length === 0 ? (
+                                <p className="empty-cart">Your cart is empty.</p>
+                            ) : (
+                                cart.map(item => (
+                                    <div key={item.id} className="cart-item">
+                                        <div className="cart-item-name">
+                                            {item.name}
+                                        </div>
+
+                                        <p>₩{item.price.toLocaleString()}</p>
+
+                                        <p>Quantity: {item.quantity}</p>
+
+                                        <button onClick={() => increaseQuantity(item.id)}>+</button>
+                                        <button onClick={() => decreaseQuantity(item.id)}>−</button>
+                                        <button
+                                            className="remove-button"
+                                            onClick={() => removeItem(item.id)}
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+
+                            <h3 className="cart-total">
+                                Total: ₩{totalPrice.toLocaleString()}
+                            </h3>
+                        </div>
+
+                    </div>
+                </div>
+            );
+
+        }
+
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<ShoppingCart />);
+    </script>
+
+</body>
+</html>
