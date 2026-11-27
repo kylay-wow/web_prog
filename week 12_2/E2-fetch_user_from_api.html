@@ -144,8 +144,11 @@ function UserProfile() {
                 setUser(data);
 
             } catch (err) {
-                setError(err.message);
+                if (err.name === 'AbortError') return;
 
+                if (controllerRef.current === controller) {
+                    setError(err.message);
+                }
             } finally {
                 setLoading(false);
             }
@@ -156,7 +159,7 @@ function UserProfile() {
 
         return (
             <div className="task-card">
-                <h2>User Profile</h2>
+                <h2>User Profile(numbers 1-10 only)</h2>
                 <input
                     className="task-input"
                     type="number"
