@@ -1,0 +1,203 @@
+<!-- // Build a component that:
+//
+// 1. Has an <input> for a GitHub username
+//
+// 2. On Search button click (or debounce 500ms),
+// fetch from: https://api.github.com/users/{username}
+//
+// 3. Display: avatar, name, bio, followers, public_repos
+//
+// 4. Show a loading indicator while fetching
+//
+// 5. Show an error message when user is not found (404)
+//
+// 6. BONUS: abort the previous request when username changes
+//
+// API fields: { login, name, bio, avatar_url,
+// followers, public_repos, html_url }
+//
+// Tip: search "muxiddin19" to test with the instructor's
+profile! -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code challenge</title>
+
+    <style>
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #24292f;
+        }
+
+        #root {
+            max-width: 500px;
+            margin: 60px auto;
+        }
+
+        #root > div {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid #d0d7de;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        input {
+            width: 75%;
+            padding: 11px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #0969da;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-top: 24px;
+        }
+
+        h2 {
+            margin-bottom: 8px;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            font-size: 13px;
+            color: #656d76;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const {useState, useRef, useEffect} = React;
+
+        
+        function GitHubSearch() {
+
+            const [user, setUser] = useState('');
+            const [profile, setProfile] = useState(null);
+            const [error, setError] = useState('');
+            const [loading, setLoading] = useState(false);
+            const controllerRef = useRef(null);
+            const [status, setStatus] = useState('');
+
+        async function handleSearch(){
+
+            if (controllerRef.current){
+                controllerRef.current.abort();
+                setStatus('Previous request cancelled.');
+            }
+
+            const controller = new AbortController();
+            setStatus('Searching...');
+            controllerRef.current = controller;
+            setLoading(true);
+            setError('');
+            setProfile(null);
+            try{
+                const res = await fetch(`https://api.github.com/users/${user}`, {signal: controller.signal});
+                if (res.status === 404) {
+                    throw new Error('User not found')
+                }else if (!res.ok){
+                    throw new Error('Something went wrong')
+                }
+                
+                const data = await res.json();
+                setProfile(data);
+            }catch (err){
+                if (err.name === 'AbortError') return;
+                setError(err.message)
+            }finally{
+                if (controllerRef.current === controller){
+                    setLoading(false);
+                    setStatus('Profile Loaded');
+                }
+            }
+        }   
+        
+        useEffect(() => {
+            if (controllerRef.current) {
+                controllerRef.current.abort();
+            }
+            if (!user.trim()) return;
+
+            const timer = setTimeout(() => {
+                handleSearch();
+            }, 500);
+
+            return () => clearTimeout(timer);
+
+        }, [user]);
+
+        return (
+            <div>
+                <input
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                />
+
+                {loading && (
+                    <div>
+                        <p>Loading</p>
+                    </div>
+                )}
+
+                {status && <p className="status">{status}</p>}
+
+                {error && (
+                    <p>{error}</p>
+                )}
+
+                {profile && (
+                    <div>
+                        <img src={profile.avatar_url} alt="Profile avatar"/>
+                        <h2>{profile.name}</h2>
+                        <p>{profile.bio}</p>
+                        <p>Followers: {profile.followers}</p>
+                        <p>Public repo: {profile.public_repos}</p>
+                    </div>
+                )}
+            </div>
+        );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<GitHubSearch/>);
+    </script>
+
+</body>
+</html>

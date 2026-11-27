@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code challenge</title>
+
+    <style>
+        
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f3f5f8;
+    color: #24292f;
+}
+
+#root {
+    width: 100%;
+    max-width: 450px;
+}
+
+.task-card {
+    background: white;
+    padding: 30px;
+    border: 1px solid #e1e4e8;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+h2 {
+    margin-top: 0;
+    color: #24292f;
+}
+
+.task-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+}
+
+.task-input:focus {
+    border-color: #0969da;
+}
+
+.task-button {
+    padding: 10px 18px;
+    margin: 5px 4px 5px 0;
+    border: none;
+    border-radius: 6px;
+    background: #0969da;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.task-button:hover {
+    background: #0757b5;
+}
+
+.task-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.result {
+    margin-top: 18px;
+    padding: 15px;
+    background: #f6f8fa;
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+.error {
+    color: #cf222e;
+}
+
+.timer {
+    margin: 25px 0;
+    font-size: 42px;
+    font-family: monospace;
+    font-weight: bold;
+    text-align: center;
+    color: #0969da;
+}
+
+
+    </style>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const {useState, useRef, useEffect} = React;
+
+        
+function TitleEditor() {
+    const [text, setText] = useState('');
+
+    useEffect(() => {
+        document.title = text || 'WebPro';
+
+        return () => {
+            document.title = 'WebPro';
+        };
+        }, [text]);
+
+        return (
+            <div className="task-card">
+                <h2>Title Editor</h2>
+                <p>Type something to change your browser tab title.</p>
+
+                <input
+                    className="task-input"
+                    type="text"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Type title..."
+                />
+
+                <div className="result">
+                    Current title: {text || 'WebPro'}
+                </div>
+            </div>
+        );
+    }
+
+        
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<TitleEditor/>);
+    </script>
+
+</body>
+</html>

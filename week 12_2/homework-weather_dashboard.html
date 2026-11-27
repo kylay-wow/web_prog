@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #101827;
+      font-family: Arial, sans-serif;
+      color: white;
+      padding: 20px;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 430px;
+      background: #1c293b;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .heading h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .heading p {
+      color: #a8b5c8;
+      font-size: 14px;
+    }
+
+    .search {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid #40516a;
+      border-radius: 9px;
+      background: #26364b;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #60a5fa;
+    }
+
+    button {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 9px;
+      background: #3b82f6;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    button:disabled {
+      background: #64748b;
+      cursor: not-allowed;
+    }
+
+    .weather-card {
+      margin-top: 25px;
+      padding: 25px;
+      border-radius: 15px;
+      background: #26364b;
+      text-align: center;
+    }
+
+    .city-name {
+      color: #a8b5c8;
+      font-size: 16px;
+    }
+
+    .temperature {
+      font-size: 64px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .condition {
+      font-size: 18px;
+      color: #93c5fd;
+      margin-bottom: 25px;
+    }
+
+    .wind {
+      border-top: 1px solid #40516a;
+      padding-top: 18px;
+      color: #cbd5e1;
+    }
+
+    .message {
+      text-align: center;
+      color: #a8b5c8;
+      margin-top: 20px;
+    }
+
+    .error {
+      color: #f87171;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function WeatherDashboard() {
+      const [city, setCity] = useState('');
+      const [searchCity, setSearchCity] = useState('');
+      const [cityName, setCityName] = useState('');
+      const [weather, setWeather] = useState(null);
+      const [coords, setCoords] = useState(null);
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState('');
+
+      // 1. Get city coordinates
+      useEffect(() => {
+        if (!searchCity) return;
+
+        async function fetchCoordinates() {
+          setLoading(true);
+          setError('');
+          setWeather(null);
+          setCoords(null);
+
+          let foundCity = false;
+
+          try {
+            const res = await fetch(
+              `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchCity)}&count=1`
+            );
+
+            if (!res.ok) {
+              throw new Error('Unable to search for city');
+            }
+
+            const data = await res.json();
+
+            if (!data.results || data.results.length === 0) {
+              throw new Error('City not found. Try another name.');
+            }
+
+            const result = data.results[0];
+
+            setCoords({
+              latitude: result.latitude,
+              longitude: result.longitude
+            });
+
+            setCityName(result.name);
+            foundCity = true;
+
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            if (!foundCity) {
+              setLoading(false);
+            }
+          }
+        }
+
+        fetchCoordinates();
+      }, [searchCity]);
+
+      // 2. Get actual weather
+      useEffect(() => {
+        if (!coords) return;
+
+        async function getWeather() {
+          try {
+            const res = await fetch(
+              `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,wind_speed_10m,weather_code`
+            );
+
+            if (!res.ok) {
+              throw new Error('Failed to fetch weather');
+            }
+
+            const data = await res.json();
+            setWeather(data.current);
+
+          } catch (err) {
+            setError(err.message);
+          } finally {
+            setLoading(false);
+          }
+        }
+
+        getWeather();
+      }, [coords]);
+
+      // 3. Convert weather codes
+      function getWeatherDescription(code) {
+        const descriptions = {
+          0: 'Clear sky',
+          1: 'Mainly clear',
+          2: 'Partly cloudy',
+          3: 'Overcast',
+          45: 'Fog',
+          48: 'Depositing rime fog',
+          51: 'Light drizzle',
+          53: 'Moderate drizzle',
+          55: 'Heavy drizzle',
+          61: 'Light rain',
+          63: 'Moderate rain',
+          65: 'Heavy rain',
+          71: 'Light snow',
+          73: 'Moderate snow',
+          75: 'Heavy snow',
+          80: 'Rain showers',
+          81: 'Moderate rain showers',
+          82: 'Heavy rain showers',
+          95: 'Thunderstorm',
+          96: 'Thunderstorm with hail',
+          99: 'Heavy thunderstorm with hail'
+        };
+
+        return descriptions[code] || 'Unknown weather';
+      }
+
+      // 4. Submit search
+      function handleSearch(e) {
+        e.preventDefault();
+
+        if (!city.trim()) {
+          setError('Please enter a city name.');
+          return;
+        }
+
+        setSearchCity(city.trim());
+      }
+
+      return (
+        <div className="dashboard">
+
+          <div className="heading">
+            <h1>Weather Dashboard</h1>
+            <p>Check the weather around the world</p>
+          </div>
+
+          <form className="search" onSubmit={handleSearch}>
+            <input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Enter a city..."
+            />
+
+            <button type="submit" disabled={loading}>
+              Search
+            </button>
+          </form>
+
+          {loading && (
+            <p className="message">Fetching weather...</p>
+          )}
+
+          {error && (
+            <p className="message error">{error}</p>
+          )}
+
+          {weather && !loading && (
+            <div className="weather-card">
+              <div className="city-name">{cityName}</div>
+
+              <div className="temperature">
+                {weather.temperature_2m}°C
+              </div>
+
+              <div className="condition">
+                {getWeatherDescription(weather.weather_code)}
+              </div>
+
+              <div className="wind">
+                Wind Speed: {weather.wind_speed_10m} km/h
+              </div>
+            </div>
+          )}
+
+          {!weather && !loading && !error && (
+            <p className="message">
+              Enter a city to get started.
+            </p>
+          )}
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root'))
+      .render(<WeatherDashboard />);
+  </script>
+</body>
+</html>
