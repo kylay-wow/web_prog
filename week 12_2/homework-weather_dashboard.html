@@ -11,9 +11,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -51,14 +49,40 @@
       font-size: 14px;
     }
 
+    .mode-switch {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .mode-switch button {
+      flex: 1;
+      background: #26364b;
+      color: #a8b5c8;
+      border: 1px solid #40516a;
+    }
+
+    .mode-switch button.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+
     .search {
       display: flex;
       gap: 8px;
       margin-bottom: 20px;
     }
 
+    .coordinate-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
     input {
-      flex: 1;
+      width: 100%;
       min-width: 0;
       padding: 13px;
       border: 1px solid #40516a;
@@ -143,14 +167,20 @@
 
     function WeatherDashboard() {
       const [city, setCity] = useState('');
+      const [latitude, setLatitude] = useState('');
+      const [longitude, setLongitude] = useState('');
+
+      const [mode, setMode] = useState('city');
       const [searchCity, setSearchCity] = useState('');
       const [cityName, setCityName] = useState('');
+
       const [weather, setWeather] = useState(null);
       const [coords, setCoords] = useState(null);
+
       const [loading, setLoading] = useState(false);
       const [error, setError] = useState('');
 
-      // 1. Get city coordinates
+      // 1. Search city coordinates
       useEffect(() => {
         if (!searchCity) return;
 
@@ -160,21 +190,17 @@
           setWeather(null);
           setCoords(null);
 
-          let foundCity = false;
-
           try {
             const res = await fetch(
               `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchCity)}&count=1`
             );
 
-            if (!res.ok) {
-              throw new Error('Unable to search for city');
-            }
+            if (!res.ok) throw new Error('Unable to search for city');
 
             const data = await res.json();
 
             if (!data.results || data.results.length === 0) {
-              throw new Error('City not found. Try another name.');
+              throw new Error('City not found');
             }
 
             const result = data.results[0];
@@ -185,33 +211,29 @@
             });
 
             setCityName(result.name);
-            foundCity = true;
 
           } catch (err) {
             setError(err.message);
-          } finally {
-            if (!foundCity) {
-              setLoading(false);
-            }
+            setLoading(false);
           }
         }
 
         fetchCoordinates();
       }, [searchCity]);
 
-      // 2. Get actual weather
+      // 2. Fetch weather using coordinates
       useEffect(() => {
         if (!coords) return;
 
         async function getWeather() {
+          setLoading(true);
+
           try {
             const res = await fetch(
               `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current=temperature_2m,wind_speed_10m,weather_code`
             );
 
-            if (!res.ok) {
-              throw new Error('Failed to fetch weather');
-            }
+            if (!res.ok) throw new Error('Failed to fetch weather');
 
             const data = await res.json();
             setWeather(data.current);
@@ -226,7 +248,7 @@
         getWeather();
       }, [coords]);
 
-      // 3. Convert weather codes
+      // 3. Weather descriptions
       function getWeatherDescription(code) {
         const descriptions = {
           0: 'Clear sky',
@@ -255,8 +277,8 @@
         return descriptions[code] || 'Unknown weather';
       }
 
-      // 4. Submit search
-      function handleSearch(e) {
+      // 4. City search
+      function handleCitySearch(e) {
         e.preventDefault();
 
         if (!city.trim()) {
@@ -264,7 +286,47 @@
           return;
         }
 
+        setWeather(null);
+        setError('');
         setSearchCity(city.trim());
+      }
+
+      // 5. Coordinate search
+      function handleCoordinateSearch(e) {
+        e.preventDefault();
+
+        const lat = Number(latitude);
+        const lon = Number(longitude);
+
+        if (
+          latitude.trim() === '' ||
+          longitude.trim() === '' ||
+          !Number.isFinite(lat) ||
+          !Number.isFinite(lon) ||
+          lat < -90 || lat > 90 ||
+          lon < -180 || lon > 180
+        ) {
+          setError('Enter valid coordinates. Latitude: -90 to 90, longitude: -180 to 180.');
+          return;
+        }
+
+        setError('');
+        setWeather(null);
+        setCityName('Custom coordinates');
+        setCoords({
+          latitude: lat,
+          longitude: lon
+        });
+      }
+
+      // 6. Switch search modes
+      function changeMode(newMode) {
+        setMode(newMode);
+        setError('');
+        setWeather(null);
+        setCoords(null);
+        setSearchCity('');
+        setLoading(false);
       }
 
       return (
@@ -275,17 +337,61 @@
             <p>Check the weather around the world</p>
           </div>
 
-          <form className="search" onSubmit={handleSearch}>
-            <input
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="Enter a city..."
-            />
-
-            <button type="submit" disabled={loading}>
-              Search
+          <div className="mode-switch">
+            <button
+              type="button"
+              className={mode === 'city' ? 'active' : ''}
+              onClick={() => changeMode('city')}
+            >
+              City Search
             </button>
-          </form>
+
+            <button
+              type="button"
+              className={mode === 'coordinates' ? 'active' : ''}
+              onClick={() => changeMode('coordinates')}
+            >
+              Coordinates
+            </button>
+          </div>
+
+          {mode === 'city' && (
+            <form className="search" onSubmit={handleCitySearch}>
+              <input
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="Enter a city..."
+              />
+
+              <button type="submit" disabled={loading}>Search</button>
+            </form>
+          )}
+
+          {mode === 'coordinates' && (
+            <form onSubmit={handleCoordinateSearch}>
+              <div className="coordinate-inputs">
+                <input
+                  type="number"
+                  step="any"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  placeholder="Latitude (-90 to 90)"
+                />
+
+                <input
+                  type="number"
+                  step="any"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                  placeholder="Longitude (-180 to 180)"
+                />
+              </div>
+
+              <button type="submit" disabled={loading}>
+                Get Weather
+              </button>
+            </form>
+          )}
 
           {loading && (
             <p className="message">Fetching weather...</p>
@@ -310,13 +416,16 @@
               <div className="wind">
                 Wind Speed: {weather.wind_speed_10m} km/h
               </div>
+
+              <div className="wind">
+                Latitude: {coords.latitude}<br />
+                Longitude: {coords.longitude}
+              </div>
             </div>
           )}
 
           {!weather && !loading && !error && (
-            <p className="message">
-              Enter a city to get started.
-            </p>
+            <p className="message">Enter a city or coordinates to get started.</p>
           )}
 
         </div>
